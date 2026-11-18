@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Shuttle | ShuttleConnect</title>
+    <meta name="description" content="Search scheduled shuttle trips and reserve your seats with ShuttleConnect.">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html" class="brand">
+        <span class="brand-icon">S</span>
+        <span>Shuttle <strong>Connect</strong></span>
+    </a>
+
+    <nav class="navigation">
+        <a href="index.html">Home</a>
+        <a href="booking.html" class="active">Book Seats</a>
+        <a href="passenger-dashboard.html">My Bookings</a>
+    </nav>
+
+    <div class="header-actions">
+        <a href="login.html" class="login-link">Login</a>
+        <a href="register.html" class="register-button">Register</a>
+    </div>
+</header>
+
+<main class="page-container">
+
+    <div class="page-intro">
+        <p class="eyebrow">SHUTTLECONNECT RESERVATIONS</p>
+        <h1>Book your next journey.</h1>
+        <p>Choose your route, select your seats and confirm your shuttle booking.</p>
+    </div>
+
+    <!-- TRIP SEARCH -->
+    <section class="panel search-panel">
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">STEP 01</span>
+                <h2>Find your shuttle</h2>
+                <p>Search available scheduled trips.</p>
+            </div>
+            <span class="heading-icon">↗</span>
+        </div>
+
+        <form id="tripSearchForm" class="search-form">
+            <div class="field-group">
+                <label for="origin">Origin</label>
+                <input
+                    type="text"
+                    id="origin"
+                    name="origin"
+                    placeholder="Enter origin"
+                    value="OMR"
+                    required
+                >
+            </div>
+
+            <span class="route-arrow">→</span>
+
+            <div class="field-group">
+                <label for="destination">Destination</label>
+                <input
+                    type="text"
+                    id="destination"
+                    name="destination"
+                    placeholder="Enter destination"
+                    value="Teynampet"
+                    required
+                >
+            </div>
+
+            <div class="field-group">
+                <label for="travelDate">Travel date</label>
+                <input type="date" id="travelDate" name="date" required>
+            </div>
+
+            <button type="submit" class="primary-button search-button" id="searchButton">
+                Search Trips
+            </button>
+        </form>
+
+        <div id="searchMessage" class="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- TRIP RESULTS -->
+    <section class="panel trips-panel">
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">AVAILABLE JOURNEYS</span>
+                <h2>Select your trip</h2>
+                <p>Choose a scheduled shuttle to view its available seats.</p>
+            </div>
+            <span id="tripCount" class="status-pill">0 trips</span>
+        </div>
+
+        <div id="tripResults" class="trip-results">
+            <div class="empty-state">
+                <span class="empty-icon">↗</span>
+                <h3>No trips searched yet</h3>
+                <p>Enter your route and travel date above to find available trips.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEAT SELECTION -->
+    <section class="panel seats-panel">
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">STEP 02</span>
+                <h2>Select your seats</h2>
+                <p>Choose your preferred seats from the shuttle layout.</p>
+            </div>
+            <span id="seatStatus" class="status-pill">No trip selected</span>
+        </div>
+
+        <div class="seat-content">
+
+            <div class="bus-container">
+                <div class="bus-front">
+                    <span class="driver-indicator">◉ &nbsp; DRIVER</span>
+                    <span>FRONT</span>
+                </div>
+
+                <div class="seat-column-labels">
+                    <span>LEFT</span>
+                    <span>RIGHT</span>
+                </div>
+
+                <div id="seatLayout" class="seat-layout">
+                    <div class="seat-placeholder">
+                        Search for a trip and select it to load the seat layout.
+                    </div>
+                </div>
+
+                <div class="bus-rear">REAR OF THE SHUTTLE</div>
+            </div>
+
+            <aside class="booking-summary">
+
+                <div class="summary-card">
+                    <h3>Seat availability</h3>
+
+                    <div class="legend">
+                        <div><span class="legend-box available"></span> Available</div>
+                        <div><span class="legend-box booked"></span> Booked</div>
+                        <div><span class="legend-box selected"></span> Selected</div>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <h3>Your selection</h3>
+
+                    <div id="selectedSeats" class="selected-seat-list">
+                        <span class="muted-text">No seats selected</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-line">
+                        <span>Selected seats</span>
+                        <strong id="seatCount">0</strong>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Fare per seat</span>
+                        <strong id="farePerSeat">₹0</strong>
+                    </div>
+
+                    <div class="total-line">
+                        <span>Total amount</span>
+                        <strong id="totalAmount">₹0</strong>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="confirmBookingButton"
+                        class="primary-button confirm-button"
+                        disabled
+                    >
+                        Confirm Booking
+                    </button>
+
+                    <p class="secure-note">Your booking will be confirmed by the server.</p>
+                </div>
+
+            </aside>
+        </div>
+    </section>
+
+    <!-- BOOKING RESULT -->
+    <section id="bookingResult" class="panel booking-result" hidden>
+        <div class="success-icon">✓</div>
+        <h2>Booking confirmed!</h2>
+        <p id="bookingResultMessage">Your shuttle booking has been confirmed.</p>
+
+        <div class="confirmation-details">
+            <div>
+                <span>Booking reference</span>
+                <strong id="bookingReference">—</strong>
+            </div>
+            <div>
+                <span>Number of seats</span>
+                <strong id="confirmedSeatCount">—</strong>
+            </div>
+            <div>
+                <span>Total amount</span>
+                <strong id="confirmedAmount">—</strong>
+            </div>
+        </div>
+
+        <a href="passenger-dashboard.html" class="primary-button dashboard-link">
+            View My Bookings
+        </a>
+    </section>
+
+    <footer class="page-footer">
+        <p>© 2026 ShuttleConnect. All rights reserved.</p>
+    </footer>
+
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="js/booking.js"></script>
+</body>
+</html>
