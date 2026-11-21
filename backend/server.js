@@ -9,6 +9,7 @@ const pool = require('./config/db');
 const handleAuthRoute = require('./routes/authRoutes');
 const handleTripRoute = require('./routes/tripRoutes');
 const handleBookingRoute = require('./routes/bookingRoutes');
+const handleAdminRoute = require('./routes/adminRoutes');
 
 // ==========================================
 // 1. READ JSON REQUEST BODY
@@ -149,6 +150,24 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ======================================
+    // ADMIN PORTAL ROUTES
+    // ======================================
+
+    if (pathname.startsWith('/api/admin/')) {
+        await handleAdminRoute(
+            req,
+            res,
+            pathname,
+            {
+                readJsonBody,
+                sendJson
+            }
+        );
+
+        return;
+    }
+
+    // ======================================
     // HOME ROUTE
     // GET /
     // ======================================
@@ -216,6 +235,7 @@ const server = http.createServer(async (req, res) => {
     // ======================================
     // PASSENGER BOOKING ROUTES
     // PATCH /api/passenger/bookings/:id/cancel
+    // GET   /api/passenger/bookings/:id/ticket.pdf
     // ======================================
 
     const bookingHandled = await handleBookingRoute(
@@ -456,6 +476,7 @@ const server = http.createServer(async (req, res) => {
 
             const bookingId = bookingResult.insertId;
 
+            // Insert the selected seats.
             for (const seatNumber of seatNumbers) {
                 await connection.execute(
                     `INSERT INTO booking_seats
@@ -465,6 +486,37 @@ const server = http.createServer(async (req, res) => {
                 );
             }
 
+            // ======================================
+            // NEW: GENERATE UNIQUE TICKET CODE
+            // ======================================
+
+            const ticketCode =
+                'SC-TKT-' +
+                crypto.randomBytes(16).toString('hex').toUpperCase();
+
+            // ======================================
+            // NEW: SAVE TICKET IN DATABASE
+            // IMPORTANT: SAME BOOKING TRANSACTION
+            // ======================================
+
+            await connection.execute(
+                `INSERT INTO boarding_tickets
+                    (
+                        booking_id,
+                        ticket_code,
+                        ticket_status
+                    )
+                 VALUES (?, ?, 'active')`,
+                [
+                    bookingId,
+                    ticketCode
+                ]
+            );
+
+            // ======================================
+            // COMMIT BOOKING + SEATS + TICKET
+            // ======================================
+
             await connection.commit();
 
             return sendJson(res, 201, {
@@ -473,6 +525,7 @@ const server = http.createServer(async (req, res) => {
                 booking: {
                     booking_id: bookingId,
                     booking_reference: bookingReference,
+                    ticket_code: ticketCode,
                     trip_id: tripId,
                     seat_numbers: seatNumbers,
                     number_of_seats: seatNumbers.length,

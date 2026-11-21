@@ -1,8 +1,11 @@
 
-
 const pool = require('../config/db');
 
+// ==========================================
 // GET /api/trips
+// Search scheduled trips by origin, destination and date
+// ==========================================
+
 async function searchTrips(req, res, requestUrl, sendJson) {
     try {
         const origin = requestUrl.searchParams.get('origin');
@@ -27,7 +30,7 @@ async function searchTrips(req, res, requestUrl, sendJson) {
                 r.destination,
                 v.seating_capacity,
                 (
-                    SELECT COUNT(*)
+                    SELECT COUNT(DISTINCT bs.seat_number)
                     FROM booking_seats bs
                     WHERE bs.trip_id = t.trip_id
                     AND bs.seat_status = 'booked'
@@ -47,9 +50,13 @@ async function searchTrips(req, res, requestUrl, sendJson) {
 
         const formattedTrips = trips.map(trip => ({
             ...trip,
-            available_seats:
+            seating_capacity: Number(trip.seating_capacity),
+            booked_seats: Number(trip.booked_seats),
+            available_seats: Math.max(
+                0,
                 Number(trip.seating_capacity) -
                 Number(trip.booked_seats)
+            )
         }));
 
         return sendJson(res, 200, {
@@ -69,7 +76,11 @@ async function searchTrips(req, res, requestUrl, sendJson) {
     }
 }
 
+// ==========================================
 // GET /api/trips/:id/seats
+// Retrieve seat availability for a trip
+// ==========================================
+
 async function getSeatAvailability(req, res, tripId, sendJson) {
     try {
         const [trips] = await pool.execute(
@@ -92,7 +103,7 @@ async function getSeatAvailability(req, res, tripId, sendJson) {
         const capacity = Number(trips[0].seating_capacity);
 
         const [bookedSeats] = await pool.execute(
-            `SELECT seat_number
+            `SELECT DISTINCT seat_number
              FROM booking_seats
              WHERE trip_id = ?
              AND seat_status = 'booked'`,
@@ -103,12 +114,13 @@ async function getSeatAvailability(req, res, tripId, sendJson) {
             seat => Number(seat.seat_number)
         );
 
+        const bookedSet = new Set(bookedNumbers);
         const seats = [];
 
         for (let number = 1; number <= capacity; number++) {
             seats.push({
                 seat_number: number,
-                status: bookedNumbers.includes(number)
+                status: bookedSet.has(number)
                     ? 'booked'
                     : 'available'
             });
@@ -118,8 +130,8 @@ async function getSeatAvailability(req, res, tripId, sendJson) {
             success: true,
             trip_id: Number(tripId),
             seating_capacity: capacity,
-            available_seats: capacity - bookedSeats.length,
-            booked_seats: bookedSeats.length,
+            available_seats: capacity - bookedSet.size,
+            booked_seats: bookedSet.size,
             seats
         });
 

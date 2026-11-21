@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login - ShuttleConnect</title>
+
+    <meta name="description" content="Secure administrator login for ShuttleConnect.">
+
+    <link rel="stylesheet" href="css/admin-login.css">
+</head>
+
+<body>
+
+    <div class="auth-bg"></div>
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+
+    <main class="auth-page auth-page-scroll">
+
+        <div class="auth-container">
+
+            <div class="glass-card-wrap">
+
+                <div class="glass-card theme-passenger">
+
+                    <!-- Logo -->
+                    <div class="auth-logo">
+                        <div class="auth-logo-icon">S</div>
+
+                        <div class="auth-logo-text">
+                            Shuttle<span>Connect</span>
+                        </div>
+                    </div>
+
+                    <!-- Heading -->
+                    <h1 class="auth-title">Administrator Login</h1>
+
+                    <p class="auth-subtitle">
+                        Sign in to manage the ShuttleConnect network
+                    </p>
+
+                    <div style="
+                        text-align:center;
+                        margin-bottom:22px;
+                        padding:10px;
+                        border-radius:10px;
+                        background:rgba(37,99,235,0.12);
+                        color:#2563eb;
+                        font-size:13px;
+                        font-weight:600;
+                    ">
+                        SECURE ADMINISTRATOR ACCESS
+                    </div>
+
+                    <!-- Admin Login Form -->
+                    <form id="adminLoginForm" novalidate>
+
+                        <div class="auth-field">
+
+                            <label for="adminEmail">Admin Email Address</label>
+
+                            <div class="input-wrap">
+
+                                <span class="input-icon" aria-hidden="true">@</span>
+
+                                <input
+                                    class="auth-input"
+                                    id="adminEmail"
+                                    name="email"
+                                    type="email"
+                                    placeholder="Enter admin email"
+                                    autocomplete="username"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="auth-field">
+
+                            <label for="adminPassword">Password</label>
+
+                            <div class="input-wrap">
+
+                                <input
+                                    class="auth-input"
+                                    id="adminPassword"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required
+                                >
+
+                                <button
+                                    class="toggle-pw"
+                                    type="button"
+                                    id="adminTogglePassword"
+                                    aria-label="Show password"
+                                >
+                                    Show
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Error / Success Message -->
+                        <div
+                            id="adminLoginMessage"
+                            class="auth-message"
+                            role="status"
+                            aria-live="polite"
+                        ></div>
+
+                        <!-- Login Button -->
+                        <button
+                            type="submit"
+                            class="auth-btn auth-btn-blue"
+                            id="adminLoginBtn"
+                        >
+                            Sign In to Admin Portal
+                        </button>
+
+                    </form>
+
+                    <p class="auth-footer-text">
+                        <a href="login.html">Return to Passenger Login</a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="js/admin-auth.js"></script>
+
+</body>
+</html>

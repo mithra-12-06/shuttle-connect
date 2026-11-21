@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ShuttleConnect administration dashboard">
+    <title>Admin Dashboard | ShuttleConnect</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- MOBILE OVERLAY -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar" id="adminSidebar">
+
+            <a href="index.html" class="admin-brand">
+                <span class="brand-mark">S</span>
+                <span class="brand-name">Shuttle<span>Connect</span></span>
+            </a>
+
+            <div class="sidebar-label">WORKSPACE</div>
+
+            <nav class="sidebar-nav">
+
+                <button class="nav-item active" data-view="overview">
+                    <span class="nav-icon">▦</span>
+                    <span>Overview</span>
+                </button>
+
+                <button class="nav-item" data-view="trips">
+                    <span class="nav-icon">▣</span>
+                    <span>Trips Management</span>
+                </button>
+
+                <button class="nav-item" data-view="routes">
+                    <span class="nav-icon">⌖</span>
+                    <span>Routes Management</span>
+                </button>
+
+                <button class="nav-item" data-view="vehicles">
+                    <span class="nav-icon">▤</span>
+                    <span>Vehicles</span>
+                </button>
+
+                <button class="nav-item" data-view="bookings">
+                    <span class="nav-icon">▧</span>
+                    <span>Bookings</span>
+                </button>
+
+                <button class="nav-item" data-view="passengers">
+                    <span class="nav-icon">♙</span>
+                    <span>Passengers</span>
+                </button>
+
+                <div class="sidebar-label sidebar-label-spaced">
+                    OPERATIONS
+                </div>
+
+                <button class="nav-item" data-view="connectivity">
+                    <span class="nav-icon">⇄</span>
+                    <span>Connectivity Requests</span>
+                    <span class="nav-count">New</span>
+                </button>
+
+                <button class="nav-item" data-view="service">
+                    <span class="nav-icon">◷</span>
+                    <span>Service Status</span>
+                </button>
+
+                <div class="sidebar-label sidebar-label-spaced">
+                    PREFERENCES
+                </div>
+
+                <button class="nav-item" data-view="settings">
+                    <span class="nav-icon">⚙</span>
+                    <span>Settings</span>
+                </button>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="admin-profile">
+                    <div class="profile-avatar">A</div>
+                    <div class="profile-info">
+                        <strong>Administrator</strong>
+                        <span>Admin Portal Preview</span>
+                    </div>
+                </div>
+
+                <button class="logout-button" id="logoutButton">
+                    <span>↪</span> Return to Home
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <!-- TOPBAR -->
+            <header class="admin-topbar">
+
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"
+                        aria-label="Open navigation">☰</button>
+
+                    <div>
+                        <div class="breadcrumb">Workspace / <span id="breadcrumbName">Overview</span></div>
+                        <h1 id="pageHeading">Dashboard Overview</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="system-status">
+                        <span class="status-dot"></span>
+                        Frontend Preview
+                    </div>
+
+                    <div class="topbar-avatar">A</div>
+                </div>
+
+            </header>
+
+            <div class="admin-content">
+
+                <!-- OVERVIEW -->
+                <section class="admin-view active" id="view-overview">
+
+                    <div class="welcome-row">
+                        <div>
+                            <h2>Welcome back, Administrator!</h2>
+                            <p>Here's an overview of your ShuttleConnect operations.</p>
+                        </div>
+
+                        <div class="today-date" id="todayDate"></div>
+                    </div>
+
+                    <div class="integration-notice">
+                        <span class="notice-icon">ⓘ</span>
+                        <div>
+                            <strong>Admin backend integration pending</strong>
+                            <p>This dashboard is currently a frontend preview. Live statistics and management actions will be connected after admin APIs are developed.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <article class="stat-card">
+                            <div class="stat-top">
+                                <span>Total Trips</span>
+                                <span class="stat-icon blue">▣</span>
+                            </div>
+                            <h3>—</h3>
+                            <p>Awaiting live data</p>
+                        </article>
+
+                        <article class="stat-card">
+                            <div class="stat-top">
+                                <span>Total Bookings</span>
+                                <span class="stat-icon purple">▧</span>
+                            </div>
+                            <h3>—</h3>
+                            <p>Awaiting live data</p>
+                        </article>
+
+                        <article class="stat-card">
+                            <div class="stat-top">
+                                <span>Active Vehicles</span>
+                                <span class="stat-icon green">▤</span>
+                            </div>
+                            <h3>—</h3>
+                            <p>Awaiting live data</p>
+                        </article>
+
+                        <article class="stat-card">
+                            <div class="stat-top">
+                                <span>Passengers</span>
+                                <span class="stat-icon orange">♙</span>
+                            </div>
+                            <h3>—</h3>
+                            <p>Awaiting live data</p>
+                        </article>
+
+                    </div>
+
+                    <div class="overview-grid">
+
+                        <article class="panel activity-panel">
+                            <div class="panel-heading">
+                                <div>
+                                    <h3>Booking Activity</h3>
+                                    <p>Shuttle booking trends</p>
+                                </div>
+                                <span class="panel-tag">Analytics</span>
+                            </div>
+
+                            <div class="chart-placeholder">
+                                <div class="chart-icon">▥</div>
+                                <strong>Booking analytics will appear here</strong>
+                                <p>Chart data will be displayed after backend integration.</p>
+                            </div>
+                        </article>
+
+                        <article class="panel">
+                            <div class="panel-heading">
+                                <div>
+                                    <h3>Connectivity Overview</h3>
+                                    <p>First-mile and last-mile requests</p>
+                                </div>
+                            </div>
+
+                            <div class="connectivity-summary">
+                                <div class="connectivity-summary-icon">⇄</div>
+                                <h3>Connectivity Management</h3>
+                                <p>Review passenger requests, manage approvals and track completion.</p>
+                                <button class="primary-button" data-go="connectivity">
+                                    View Requests <span>→</span>
+                                </button>
+                            </div>
+                        </article>
+
+                    </div>
+
+                    <article class="panel table-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Recent Bookings</h3>
+                                <p>Latest passenger shuttle reservations</p>
+                            </div>
+                            <button class="text-button" data-go="bookings">View all →</button>
+                        </div>
+
+                        <div class="empty-state compact-empty">
+                            <div class="empty-icon">▧</div>
+                            <strong>No booking data connected yet</strong>
+                            <p>Bookings will appear here after the admin API is implemented.</p>
+                        </div>
+                    </article>
+
+                </section>
+
+                <!-- TRIPS -->
+                <section class="admin-view" id="view-trips">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Trips Management</h2>
+                            <p>Monitor and manage scheduled shuttle trips.</p>
+                        </div>
+                        <button class="primary-button" disabled title="Admin API required">
+                            + Add Trip
+                        </button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="table-toolbar">
+                            <input type="search" class="table-search"
+                                placeholder="Search trips..." disabled>
+                            <span class="panel-tag">Backend integration required</span>
+                        </div>
+
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Trip ID</th>
+                                        <th>Origin</th>
+                                        <th>Destination</th>
+                                        <th>Departure</th>
+                                        <th>Arrival</th>
+                                        <th>Vehicle</th>
+                                        <th>Fare</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state">
+                            <div class="empty-icon">▣</div>
+                            <strong>Trip records are not connected</strong>
+                            <p>Trip management will be enabled after admin APIs are implemented.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ROUTES -->
+                <section class="admin-view" id="view-routes">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Routes Management</h2>
+                            <p>View and organize shuttle routes.</p>
+                        </div>
+                        <button class="primary-button" disabled>+ Add Route</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="empty-state">
+                            <div class="empty-icon">⌖</div>
+                            <strong>No route management data connected</strong>
+                            <p>Route records and management actions require admin APIs.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VEHICLES -->
+                <section class="admin-view" id="view-vehicles">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Vehicle Management</h2>
+                            <p>Monitor shuttle vehicles and seating capacity.</p>
+                        </div>
+                        <button class="primary-button" disabled>+ Add Vehicle</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="empty-state">
+                            <div class="empty-icon">▤</div>
+                            <strong>Vehicle records are not connected</strong>
+                            <p>Vehicle management will be enabled after backend integration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- BOOKINGS -->
+                <section class="admin-view" id="view-bookings">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Booking Management</h2>
+                            <p>Review passenger bookings and reservation details.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="table-toolbar">
+                            <input type="search" class="table-search"
+                                placeholder="Search booking reference..." disabled>
+                            <select disabled>
+                                <option>All statuses</option>
+                                <option>Confirmed</option>
+                                <option>Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Booking Reference</th>
+                                        <th>Passenger</th>
+                                        <th>Route</th>
+                                        <th>Travel Date</th>
+                                        <th>Seats</th>
+                                        <th>Fare</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state">
+                            <div class="empty-icon">▧</div>
+                            <strong>No booking records connected</strong>
+                            <p>Passenger bookings will be displayed here after admin API integration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PASSENGERS -->
+                <section class="admin-view" id="view-passengers">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Passenger Management</h2>
+                            <p>View registered ShuttleConnect passengers.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="empty-state">
+                            <div class="empty-icon">♙</div>
+                            <strong>Passenger data is not connected</strong>
+                            <p>Passenger management requires an authorized admin API.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CONNECTIVITY -->
+                <section class="admin-view" id="view-connectivity">
+
+                    <div class="section-intro">
+                        <div>
+                            <h2>First-Mile & Last-Mile Management</h2>
+                            <p>Review and manage additional passenger connectivity requests.</p>
+                        </div>
+                    </div>
+
+                    <div class="connectivity-banner">
+                        <div class="connectivity-banner-icon">⇄</div>
+                        <div>
+                            <h3>Complete every passenger's journey</h3>
+                            <p>Manage requests connecting passengers from their homes to shuttle boarding points and from shuttle drop-off points to their final destinations.</p>
+                        </div>
+                    </div>
+
+                    <div class="connectivity-stats">
+                        <article class="mini-stat">
+                            <span>Total Requests</span>
+                            <strong>—</strong>
+                        </article>
+                        <article class="mini-stat">
+                            <span>Pending</span>
+                            <strong>—</strong>
+                        </article>
+                        <article class="mini-stat">
+                            <span>Approved</span>
+                            <strong>—</strong>
+                        </article>
+                        <article class="mini-stat">
+                            <span>Completed</span>
+                            <strong>—</strong>
+                        </article>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading connectivity-heading">
+                            <div>
+                                <h3>Connectivity Requests</h3>
+                                <p>Passenger-submitted first-mile and last-mile requests</p>
+                            </div>
+                            <span class="panel-tag">API not connected</span>
+                        </div>
+
+                        <div class="table-toolbar">
+                            <input type="search" class="table-search"
+                                placeholder="Search passenger or request..." disabled>
+
+                            <select disabled>
+                                <option>All request types</option>
+                                <option>First-mile</option>
+                                <option>Last-mile</option>
+                            </select>
+
+                            <select disabled>
+                                <option>All statuses</option>
+                                <option>Pending</option>
+                                <option>Approved</option>
+                                <option>Rejected</option>
+                                <option>Completed</option>
+                            </select>
+                        </div>
+
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Passenger</th>
+                                        <th>Booking Ref.</th>
+                                        <th>Type</th>
+                                        <th>Pickup</th>
+                                        <th>Destination</th>
+                                        <th>Requested Time</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state">
+                            <div class="empty-icon">⇄</div>
+                            <strong>No connectivity requests connected yet</strong>
+                            <p>Once passengers submit first-mile or last-mile requests and we implement the backend APIs, their requests will appear here.</p>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- SERVICE STATUS -->
+                <section class="admin-view" id="view-service">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Service Status</h2>
+                            <p>Monitor the operational status of shuttle services.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-grid">
+                        <article class="service-card">
+                            <span class="service-indicator gray"></span>
+                            <h3>Scheduled</h3>
+                            <p>Upcoming shuttle trips</p>
+                            <strong>—</strong>
+                        </article>
+
+                        <article class="service-card">
+                            <span class="service-indicator orange"></span>
+                            <h3>Delayed</h3>
+                            <p>Trips experiencing delays</p>
+                            <strong>—</strong>
+                        </article>
+
+                        <article class="service-card">
+                            <span class="service-indicator red"></span>
+                            <h3>Cancelled</h3>
+                            <p>Cancelled shuttle trips</p>
+                            <strong>—</strong>
+                        </article>
+
+                        <article class="service-card">
+                            <span class="service-indicator green"></span>
+                            <h3>Completed</h3>
+                            <p>Completed shuttle trips</p>
+                            <strong>—</strong>
+                        </article>
+                    </div>
+
+                    <div class="integration-notice">
+                        <span class="notice-icon">ⓘ</span>
+                        <div>
+                            <strong>Live service information unavailable</strong>
+                            <p>These indicators will display actual trip information after backend integration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SETTINGS -->
+                <section class="admin-view" id="view-settings">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Settings</h2>
+                            <p>Administration preferences and account information.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel settings-panel">
+                        <div class="settings-avatar">A</div>
+                        <div>
+                            <h3>Administrator</h3>
+                            <p>Admin profile information will be connected after admin authentication is implemented.</p>
+                            <span class="panel-tag">Preview account</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <footer class="admin-footer">
+                <span>© 2026 ShuttleConnect</span>
+                <span>Administration Portal · Frontend Preview</span>
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

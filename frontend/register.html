@@ -3,226 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register — ShuttleConnect Royal Travel</title>
-  <meta name="description" content="Create your ShuttleConnect account to book luxury royal shuttle passes.">
+  <title>Register - ShuttleConnect</title>
+  <meta name="description" content="Create your ShuttleConnect passenger account.">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    body { overflow-y: auto; }
-
-    /* Scrollable auth page */
-    .auth-page { align-items: flex-start; padding: 40px 0; min-height: 100vh; }
-    .auth-container { max-width: 480px; }
-
-    /* Role-switcher themed highlight */
-    .glass-card.theme-passenger {
-      border-color: rgba(30,111,255,0.3);
-      box-shadow:
-        0 8px 60px rgba(0,0,0,0.4),
-        inset 0 1px 0 rgba(30,111,255,0.2),
-        0 0 40px rgba(30,111,255,0.08);
-    }
-    .glass-card.theme-admin {
-      border-color: rgba(240,192,64,0.3);
-      box-shadow:
-        0 8px 60px rgba(0,0,0,0.4),
-        inset 0 1px 0 rgba(240,192,64,0.2),
-        0 0 40px rgba(240,192,64,0.08);
-    }
-
-    /* Row layout for 2 fields side by side */
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    /* Password strength bar */
-    .strength-bar {
-      height: 4px; border-radius: 2px;
-      background: rgba(255,255,255,0.1);
-      margin-top: 6px; overflow: hidden;
-    }
-    .strength-fill {
-      height: 100%; border-radius: 2px;
-      transition: width 0.4s, background 0.4s;
-      width: 0;
-    }
-    .strength-label {
-      font-size: 11px; margin-top: 4px;
-      font-weight: 600; color: rgba(255,255,255,0.4);
-    }
-
-    /* Terms checkbox */
-    .terms-wrap {
-      display: flex; align-items: flex-start; gap: 10px;
-      margin-bottom: 24px;
-    }
-    .terms-wrap input[type="checkbox"] {
-      width: 16px; height: 16px;
-      accent-color: #1e6fff;
-      margin-top: 2px; flex-shrink: 0;
-      cursor: pointer;
-    }
-    .terms-wrap span {
-      font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6;
-    }
-    .terms-wrap a { color: rgba(255,255,255,0.75); border-bottom: 1px solid rgba(255,255,255,0.3); }
-
-    /* Progress steps indicator */
-    .reg-steps {
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; margin-bottom: 28px;
-    }
-    .reg-step {
-      width: 28px; height: 28px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 800;
-      color: rgba(255,255,255,0.4);
-      transition: 0.3s;
-    }
-    .reg-step.done-blue { background: #1e6fff; border-color: #1e6fff; color: #fff; }
-    .reg-step.done-gold { background: var(--accent-gold); border-color: var(--accent-gold); color: #0d1420; }
-    .reg-step-line {
-      flex: 1; max-width: 40px; height: 2px;
-      background: rgba(255,255,255,0.1); border-radius: 2px;
-    }
-
-    /* Theme badge */
-    .theme-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      border-radius: 20px; padding: 4px 14px;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.5px; margin-bottom: 16px;
-    }
-    .badge-passenger {
-      background: rgba(30,111,255,0.15);
-      border: 1px solid rgba(30,111,255,0.35);
-      color: #7eb8ff;
-    }
-    .badge-admin {
-      background: rgba(240,192,64,0.15);
-      border: 1px solid rgba(240,192,64,0.35);
-      color: var(--accent-gold);
-    }
-  </style>
 </head>
 <body>
-
-  <!-- Background -->
   <div class="auth-bg"></div>
   <div class="auth-orb auth-orb-1"></div>
   <div class="auth-orb auth-orb-2"></div>
 
-  <div class="auth-page">
+  <main class="auth-page auth-page-scroll">
     <div class="auth-container">
-      <div class="glass-card-wrap" id="cardWrap">
-        <div class="glass-card theme-passenger" id="glassCard">
-
-          <!-- Logo -->
+      <div class="glass-card-wrap">
+        <div class="glass-card theme-passenger">
           <div class="auth-logo">
             <div class="auth-logo-icon">S</div>
             <div class="auth-logo-text">Shuttle<span>Connect</span></div>
           </div>
 
-          <!-- Role Tabs -->
-          <div class="role-tabs" role="tablist">
-            <button
-              class="role-tab active-passenger"
-              id="tabPassenger"
-              role="tab"
-              aria-selected="true"
-              onclick="switchRole('passenger')"
-            >
-              🚌 Passenger
-            </button>
-            <button
-              class="role-tab"
-              id="tabAdmin"
-              role="tab"
-              aria-selected="false"
-              onclick="switchRole('admin')"
-            >
-              👑 Admin
-            </button>
-          </div>
+          <h1 class="auth-title">Create Your Account</h1>
+          <p class="auth-subtitle">Register to search trips and book seats</p>
 
-          <!-- Theme Badge -->
-          <div style="text-align:center;">
-            <div class="theme-badge badge-passenger" id="themeBadge">
-              🔵 Commuter Portal — Blue & White Theme
-            </div>
-          </div>
-
-          <!-- Progress Steps -->
-          <div class="reg-steps">
-            <div class="reg-step done-blue" id="step1">1</div>
-            <div class="reg-step-line"></div>
-            <div class="reg-step" id="step2">2</div>
-            <div class="reg-step-line"></div>
-            <div class="reg-step" id="step3">✓</div>
-          </div>
-
-          <h1 class="auth-title" id="regTitle">Create Your Account</h1>
-          <p class="auth-subtitle" id="regSubtitle">Join thousands of royal commuters today</p>
-
-          <!-- Register Form -->
           <form id="registerForm" novalidate>
-
-            <!-- Full Name -->
             <div class="auth-field">
               <label for="fullName">Full Name</label>
               <div class="input-wrap">
-                <span class="input-icon">👤</span>
-                <input
-                  class="auth-input" id="fullName" name="fullName"
-                  type="text" placeholder="Enter your full name"
-                  autocomplete="name" required
-                >
+                <span class="input-icon" aria-hidden="true">P</span>
+                <input class="auth-input" id="fullName" name="fullName" type="text"
+                  placeholder="Enter your full name" autocomplete="name" required>
               </div>
             </div>
 
-            <!-- Username -->
-            <div class="auth-field">
-              <label for="regUsername">Username</label>
-              <div class="input-wrap">
-                <span class="input-icon">🏷️</span>
-                <input
-                  class="auth-input" id="regUsername" name="username"
-                  type="text" placeholder="Choose a unique username"
-                  autocomplete="username" required
-                >
-              </div>
-            </div>
-
-            <!-- Email -->
             <div class="auth-field">
               <label for="email">Email Address</label>
               <div class="input-wrap">
-                <span class="input-icon">✉️</span>
-                <input
-                  class="auth-input" id="email" name="email"
-                  type="email" placeholder="your@email.com"
-                  autocomplete="email" required
-                >
+                <span class="input-icon" aria-hidden="true">@</span>
+                <input class="auth-input" id="email" name="email" type="email"
+                  placeholder="you@example.com" autocomplete="email" required>
               </div>
             </div>
 
-            <!-- Password + Confirm -->
+            <div class="auth-field">
+              <label for="phone">Phone Number</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">#</span>
+                <input class="auth-input" id="phone" name="phone" type="tel"
+                  placeholder="Enter your phone number" autocomplete="tel">
+              </div>
+            </div>
+
             <div class="field-row">
               <div class="auth-field">
                 <label for="regPassword">Password</label>
                 <div class="input-wrap">
-                  <span class="input-icon">🔒</span>
-                  <input
-                    class="auth-input" id="regPassword" name="password"
-                    type="password" placeholder="Create password"
-                    autocomplete="new-password" required
-                    oninput="checkStrength(this.value)"
-                  >
-                  <button class="toggle-pw" type="button" onclick="togglePw('regPassword',this)">👁</button>
+                  <input class="auth-input" id="regPassword" name="password" type="password"
+                    placeholder="Create password" autocomplete="new-password" required>
+                  <button class="toggle-pw" type="button" data-password-toggle="regPassword"
+                    aria-label="Show password">Show</button>
                 </div>
-                <div class="strength-bar">
+                <div class="strength-bar" aria-hidden="true">
                   <div class="strength-fill" id="strengthFill"></div>
                 </div>
                 <div class="strength-label" id="strengthLabel">Enter password</div>
@@ -231,140 +70,34 @@
               <div class="auth-field">
                 <label for="confirmPassword">Confirm Password</label>
                 <div class="input-wrap">
-                  <span class="input-icon">🔑</span>
-                  <input
-                    class="auth-input" id="confirmPassword" name="confirmPassword"
-                    type="password" placeholder="Repeat password"
-                    autocomplete="new-password" required
-                  >
-                  <button class="toggle-pw" type="button" onclick="togglePw('confirmPassword',this)">👁</button>
+                  <input class="auth-input" id="confirmPassword" name="confirmPassword" type="password"
+                    placeholder="Repeat password" autocomplete="new-password" required>
+                  <button class="toggle-pw" type="button" data-password-toggle="confirmPassword"
+                    aria-label="Show password">Show</button>
                 </div>
               </div>
             </div>
 
-            <!-- Terms -->
             <div class="terms-wrap">
               <input type="checkbox" id="terms" required>
-              <span>
-                I agree to the <a href="#">Terms of Service</a> and
-                <a href="#">Privacy Policy</a> of ShuttleConnect Royal Travel
-              </span>
+              <label for="terms">I agree to the account registration terms.</label>
             </div>
 
-            <!-- Sign Up Button -->
-            <button type="submit" class="auth-btn auth-btn-blue" id="signUpBtn">
-              🎫 Create My Royal Pass
-            </button>
+            <div id="registerMessage" class="auth-message" role="status" aria-live="polite"></div>
 
+            <button type="submit" class="auth-btn auth-btn-blue" id="signUpBtn">
+              Create Passenger Account
+            </button>
           </form>
 
-          <!-- Login link -->
           <p class="auth-footer-text">
-            Already have an account? <a href="login.html">Sign In</a>
+            Already have an account? <a href="login.html">Sign in</a>
           </p>
-
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <script>
-    let currentRole = 'passenger';
-
-    function switchRole(role) {
-      currentRole = role;
-      const card    = document.getElementById('glassCard');
-      const tabP    = document.getElementById('tabPassenger');
-      const tabA    = document.getElementById('tabAdmin');
-      const badge   = document.getElementById('themeBadge');
-      const title   = document.getElementById('regTitle');
-      const sub     = document.getElementById('regSubtitle');
-      const btn     = document.getElementById('signUpBtn');
-      const s1 = document.getElementById('step1');
-      const s2 = document.getElementById('step2');
-      const s3 = document.getElementById('step3');
-
-      if (role === 'passenger') {
-        card.className   = 'glass-card theme-passenger';
-        tabP.className   = 'role-tab active-passenger';
-        tabA.className   = 'role-tab';
-        badge.className  = 'theme-badge badge-passenger';
-        badge.innerHTML  = '🔵 Commuter Portal — Blue &amp; White Theme';
-        title.textContent = 'Create Your Account';
-        sub.textContent  = 'Join thousands of royal commuters today';
-        btn.className    = 'auth-btn auth-btn-blue';
-        btn.textContent  = '🎫 Create My Royal Pass';
-        s1.className     = 'reg-step done-blue';
-        s2.className     = 'reg-step';
-        s3.className     = 'reg-step';
-      } else {
-        card.className   = 'glass-card theme-admin';
-        tabA.className   = 'role-tab active-admin';
-        tabP.className   = 'role-tab';
-        badge.className  = 'theme-badge badge-admin';
-        badge.innerHTML  = '👑 Admin Portal — Royal Yellow &amp; White Theme';
-        title.textContent = 'Admin Account Setup';
-        sub.textContent  = 'Register as a ShuttleConnect administrator';
-        btn.className    = 'auth-btn auth-btn-gold';
-        btn.textContent  = '👑 Create Admin Account';
-        s1.className     = 'reg-step done-gold';
-        s2.className     = 'reg-step';
-        s3.className     = 'reg-step';
-      }
-    }
-
-    function togglePw(id, btn) {
-      const input = document.getElementById(id);
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      btn.textContent = isHidden ? '🙈' : '👁';
-    }
-
-    function checkStrength(val) {
-      const fill  = document.getElementById('strengthFill');
-      const label = document.getElementById('strengthLabel');
-      let strength = 0;
-      if (val.length >= 8) strength++;
-      if (/[A-Z]/.test(val)) strength++;
-      if (/[0-9]/.test(val)) strength++;
-      if (/[^A-Za-z0-9]/.test(val)) strength++;
-
-      const levels = [
-        { w: '0%',   c: 'transparent', t: 'Too short' },
-        { w: '25%',  c: '#ef4444',     t: 'Weak' },
-        { w: '50%',  c: '#f97316',     t: 'Fair' },
-        { w: '75%',  c: '#eab308',     t: 'Good' },
-        { w: '100%', c: '#22c55e',     t: 'Strong 🔒' },
-      ];
-      const lv = levels[Math.min(strength, 4)];
-      fill.style.width      = lv.w;
-      fill.style.background = lv.c;
-      label.textContent     = lv.t;
-      label.style.color     = lv.c || 'rgba(255,255,255,0.4)';
-    }
-
-    document.getElementById('registerForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const pw  = document.getElementById('regPassword').value;
-      const cpw = document.getElementById('confirmPassword').value;
-      if (pw !== cpw) {
-        alert('Passwords do not match!');
-        return;
-      }
-      const btn = document.getElementById('signUpBtn');
-      const original = btn.textContent;
-      btn.textContent = '⏳ Creating Account...';
-      btn.disabled = true;
-
-      // Update steps
-      document.getElementById('step1').className = `reg-step ${currentRole === 'admin' ? 'done-gold' : 'done-blue'}`;
-      document.getElementById('step2').className = `reg-step ${currentRole === 'admin' ? 'done-gold' : 'done-blue'}`;
-      setTimeout(() => {
-        document.getElementById('step3').className = `reg-step ${currentRole === 'admin' ? 'done-gold' : 'done-blue'}`;
-        btn.textContent = '✅ Account Created!';
-        setTimeout(() => window.location.href = 'login.html', 800);
-      }, 1200);
-    });
-  </script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

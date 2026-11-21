@@ -4,228 +4,800 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Book a Shuttle | ShuttleConnect</title>
+
     <meta name="description" content="Search scheduled shuttle trips and reserve your seats with ShuttleConnect.">
+
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/booking.css">
+
+    <style>
+        /* =========================================
+           SHARED NAVBAR - MATCH HOMEPAGE
+        ========================================= */
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .booking-page .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            min-height: 70px;
+            padding: 12px 5%;
+            background: rgba(4, 13, 31, 0.96);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            backdrop-filter: blur(16px);
+        }
+
+        .booking-page .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .booking-page .navbar .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f0c040, #e8a800);
+            color: #071432;
+            font-weight: 900;
+        }
+
+        .booking-page .logo-wordmark {
+            color: #fff;
+        }
+
+        .booking-page .logo-connect {
+            color: #f0c040;
+        }
+
+        .booking-page .navbar .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .booking-page .navbar .nav-links a {
+            color: #c4cde0;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: color 0.25s ease;
+        }
+
+        .booking-page .navbar .nav-links a:hover,
+        .booking-page .navbar .nav-links a.active {
+            color: #f0c040;
+        }
+
+        .booking-page .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .booking-page .navbar .login-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 14px;
+            transition: color 0.25s ease;
+        }
+
+        .booking-page .navbar .login-link:hover {
+            color: #f0c040;
+            background: transparent;
+        }
+
+        .booking-page .navbar .register-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 18px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #dfb63c, #ffc526);
+            color: #071432;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .booking-page .navbar .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(240,192,64,0.25);
+        }
+
+        .booking-page .navbar .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 190px;
+            padding: 10px 15px;
+            border: 1px solid rgba(240,192,64,0.35);
+            border-radius: 9px;
+            color: #f0c040;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.25s ease;
+        }
+
+        .booking-page .navbar .profile-link:hover {
+            background: rgba(240,192,64,0.10);
+        }
+
+        .booking-page .profile-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(240,192,64,0.18);
+            color: #f0c040;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .booking-page .profile-link[hidden],
+        .booking-page .nav-actions a[hidden] {
+            display: none !important;
+        }
+
+        /* Hamburger hidden on desktop */
+        .booking-nav-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            padding: 9px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 9px;
+            background: rgba(255,255,255,0.06);
+            cursor: pointer;
+        }
+
+        .booking-nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            margin: 5px 0;
+            border-radius: 3px;
+            background: #fff;
+        }
+
+        /* =========================================
+           BOOKING PAGE HEADING
+        ========================================= */
+
+        .booking-page .page-intro h1 {
+            color: #fff;
+        }
+
+        .booking-page .page-intro h1::first-letter {
+            color: #f0c040;
+        }
+
+        /* =========================================
+           RESPONSIVE NAVIGATION
+        ========================================= */
+
+        @media (max-width: 1000px) {
+            .booking-page .navbar {
+                gap: 14px;
+            }
+
+            .booking-page .navbar .nav-links {
+                gap: 15px;
+            }
+
+            .booking-page .navbar .nav-links a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .booking-page .navbar {
+                min-height: 66px;
+                flex-wrap: wrap;
+                padding: 10px 5%;
+            }
+
+            .booking-page .navbar .logo {
+                font-size: 18px;
+            }
+
+            .booking-nav-toggle {
+                display: block;
+                order: 3;
+                margin-left: 0;
+                flex-shrink: 0;
+            }
+
+            .booking-page .navbar .nav-actions {
+                order: 2;
+                margin-left: auto;
+            }
+
+            .booking-page .navbar .nav-links {
+                display: none;
+                order: 4;
+                flex-basis: 100%;
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 8px 0;
+                border-top: 1px solid rgba(255,255,255,0.10);
+                background: rgba(4,13,31,0.98);
+            }
+
+            .booking-page .navbar .nav-links.open {
+                display: flex;
+            }
+
+            .booking-page .navbar .nav-links a {
+                display: block;
+                padding: 13px 8px;
+                font-size: 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+            }
+
+            .booking-page .navbar .nav-actions .login-link,
+            .booking-page .navbar .nav-actions .register-btn,
+            .booking-page .navbar .nav-actions .profile-link {
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .booking-page .navbar {
+                padding: 10px 14px;
+                gap: 8px;
+            }
+
+            .booking-page .navbar .logo {
+                font-size: 16px;
+            }
+
+            .booking-page .navbar .logo-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .booking-page .navbar .nav-actions {
+                gap: 4px;
+            }
+
+            .booking-page .navbar .nav-actions .login-link {
+                display: inline-flex;
+                padding: 8px 6px;
+            }
+
+            .booking-page .navbar .nav-actions .register-btn,
+            .booking-page .navbar .nav-actions .profile-link {
+                padding: 8px 9px;
+                font-size: 11px;
+            }
+
+            .booking-nav-toggle {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .booking-page .navbar .logo {
+                font-size: 14px;
+                gap: 6px;
+            }
+
+            .booking-page .navbar .nav-actions {
+                gap: 2px;
+            }
+
+            .booking-page .navbar .nav-actions .login-link {
+                font-size: 11px;
+            }
+
+            .booking-page .navbar .nav-actions .register-btn,
+            .booking-page .navbar .nav-actions .profile-link {
+                padding: 7px;
+                font-size: 10px;
+            }
+        }
+    </style>
 </head>
-<body>
 
-<header class="site-header">
-    <a href="index.html" class="brand">
-        <span class="brand-icon">S</span>
-        <span>Shuttle <strong>Connect</strong></span>
-    </a>
+<body class="booking-page">
 
-    <nav class="navigation">
-        <a href="index.html">Home</a>
-        <a href="booking.html" class="active">Book Seats</a>
-        <a href="passenger-dashboard.html">My Bookings</a>
+    <!-- SHARED NAVIGATION -->
+
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="index.html" class="logo" aria-label="ShuttleConnect home">
+            <span class="logo-icon">S</span>
+            <span class="logo-wordmark">
+                Shuttle<span class="logo-connect">Connect</span>
+            </span>
+        </a>
+
+        <button
+            type="button"
+            class="booking-nav-toggle"
+            id="navToggle"
+            aria-controls="primaryNavigation"
+            aria-expanded="false"
+            aria-label="Open navigation menu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="nav-links" id="primaryNavigation">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#about">About Us</a>
+            <a href="last-mile.html">Last-Mile</a>
+            <a href="booking.html" class="active">Bookings</a>
+            <a href="passenger-dashboard.html">View Bookings</a>
+        </div>
+
+        <div class="nav-actions">
+
+            <a href="login.html" class="login-link" id="loginNavLink">
+                Login
+            </a>
+
+            <a href="register.html" class="register-btn" id="registerNavLink">
+                Register
+            </a>
+
+            <a
+                href="passenger-dashboard.html"
+                class="profile-link"
+                id="profileNavLink"
+                hidden
+            >
+                <span class="profile-avatar" id="profileAvatar">P</span>
+                <span id="profileNavName">My Profile</span>
+            </a>
+
+        </div>
+
     </nav>
 
-    <div class="header-actions">
-        <a href="login.html" class="login-link">Login</a>
-        <a href="register.html" class="register-button">Register</a>
-    </div>
-</header>
 
-<main class="page-container">
+    <!-- MAIN BOOKING PAGE -->
 
-    <div class="page-intro">
-        <p class="eyebrow">SHUTTLECONNECT RESERVATIONS</p>
-        <h1>Book your next journey.</h1>
-        <p>Choose your route, select your seats and confirm your shuttle booking.</p>
-    </div>
+    <main class="page-container">
 
-    <!-- TRIP SEARCH -->
-    <section class="panel search-panel">
-        <div class="section-heading">
-            <div>
-                <span class="section-kicker">STEP 01</span>
-                <h2>Find your shuttle</h2>
-                <p>Search available scheduled trips.</p>
-            </div>
-            <span class="heading-icon">↗</span>
+        <div class="page-intro">
+            <p class="eyebrow">SHUTTLECONNECT RESERVATIONS</p>
+
+            <h1>Book your next journey.</h1>
+
+            <p>
+                Choose your route, select your seats and confirm your shuttle booking.
+            </p>
         </div>
 
-        <form id="tripSearchForm" class="search-form">
-            <div class="field-group">
-                <label for="origin">Origin</label>
-                <input
-                    type="text"
-                    id="origin"
-                    name="origin"
-                    placeholder="Enter origin"
-                    value="OMR"
-                    required
-                >
-            </div>
 
-            <span class="route-arrow">→</span>
+        <!-- TRIP SEARCH -->
 
-            <div class="field-group">
-                <label for="destination">Destination</label>
-                <input
-                    type="text"
-                    id="destination"
-                    name="destination"
-                    placeholder="Enter destination"
-                    value="Teynampet"
-                    required
-                >
-            </div>
+        <section class="panel search-panel">
 
-            <div class="field-group">
-                <label for="travelDate">Travel date</label>
-                <input type="date" id="travelDate" name="date" required>
-            </div>
-
-            <button type="submit" class="primary-button search-button" id="searchButton">
-                Search Trips
-            </button>
-        </form>
-
-        <div id="searchMessage" class="message" role="status" aria-live="polite"></div>
-    </section>
-
-    <!-- TRIP RESULTS -->
-    <section class="panel trips-panel">
-        <div class="section-heading">
-            <div>
-                <span class="section-kicker">AVAILABLE JOURNEYS</span>
-                <h2>Select your trip</h2>
-                <p>Choose a scheduled shuttle to view its available seats.</p>
-            </div>
-            <span id="tripCount" class="status-pill">0 trips</span>
-        </div>
-
-        <div id="tripResults" class="trip-results">
-            <div class="empty-state">
-                <span class="empty-icon">↗</span>
-                <h3>No trips searched yet</h3>
-                <p>Enter your route and travel date above to find available trips.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEAT SELECTION -->
-    <section class="panel seats-panel">
-        <div class="section-heading">
-            <div>
-                <span class="section-kicker">STEP 02</span>
-                <h2>Select your seats</h2>
-                <p>Choose your preferred seats from the shuttle layout.</p>
-            </div>
-            <span id="seatStatus" class="status-pill">No trip selected</span>
-        </div>
-
-        <div class="seat-content">
-
-            <div class="bus-container">
-                <div class="bus-front">
-                    <span class="driver-indicator">◉ &nbsp; DRIVER</span>
-                    <span>FRONT</span>
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">STEP 01</span>
+                    <h2>Find your shuttle</h2>
+                    <p>Search available scheduled trips.</p>
                 </div>
 
-                <div class="seat-column-labels">
-                    <span>LEFT</span>
-                    <span>RIGHT</span>
-                </div>
-
-                <div id="seatLayout" class="seat-layout">
-                    <div class="seat-placeholder">
-                        Search for a trip and select it to load the seat layout.
-                    </div>
-                </div>
-
-                <div class="bus-rear">REAR OF THE SHUTTLE</div>
+                <span class="heading-icon">↗</span>
             </div>
 
-            <aside class="booking-summary">
+            <form id="tripSearchForm" class="search-form">
 
-                <div class="summary-card">
-                    <h3>Seat availability</h3>
-
-                    <div class="legend">
-                        <div><span class="legend-box available"></span> Available</div>
-                        <div><span class="legend-box booked"></span> Booked</div>
-                        <div><span class="legend-box selected"></span> Selected</div>
-                    </div>
-                </div>
-
-                <div class="summary-card">
-                    <h3>Your selection</h3>
-
-                    <div id="selectedSeats" class="selected-seat-list">
-                        <span class="muted-text">No seats selected</span>
-                    </div>
-
-                    <div class="summary-divider"></div>
-
-                    <div class="summary-line">
-                        <span>Selected seats</span>
-                        <strong id="seatCount">0</strong>
-                    </div>
-
-                    <div class="summary-line">
-                        <span>Fare per seat</span>
-                        <strong id="farePerSeat">₹0</strong>
-                    </div>
-
-                    <div class="total-line">
-                        <span>Total amount</span>
-                        <strong id="totalAmount">₹0</strong>
-                    </div>
-
-                    <button
-                        type="button"
-                        id="confirmBookingButton"
-                        class="primary-button confirm-button"
-                        disabled
+                <div class="field-group">
+                    <label for="origin">Origin</label>
+                    <input
+                        type="text"
+                        id="origin"
+                        name="origin"
+                        placeholder="Enter origin"
+                        required
                     >
-                        Confirm Booking
-                    </button>
-
-                    <p class="secure-note">Your booking will be confirmed by the server.</p>
                 </div>
 
-            </aside>
-        </div>
-    </section>
+                <span class="route-arrow">→</span>
 
-    <!-- BOOKING RESULT -->
-    <section id="bookingResult" class="panel booking-result" hidden>
-        <div class="success-icon">✓</div>
-        <h2>Booking confirmed!</h2>
-        <p id="bookingResultMessage">Your shuttle booking has been confirmed.</p>
+                <div class="field-group">
+                    <label for="destination">Destination</label>
+                    <input
+                        type="text"
+                        id="destination"
+                        name="destination"
+                        placeholder="Enter destination"
+                        required
+                    >
+                </div>
 
-        <div class="confirmation-details">
-            <div>
-                <span>Booking reference</span>
-                <strong id="bookingReference">—</strong>
+                <div class="field-group">
+                    <label for="travelDate">Travel date</label>
+                    <input
+                        type="date"
+                        id="travelDate"
+                        name="date"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary-button search-button"
+                    id="searchButton"
+                >
+                    Search Trips
+                </button>
+
+            </form>
+
+            <div
+                id="searchMessage"
+                class="message"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
+
+        <!-- TRIP RESULTS -->
+
+        <section class="panel trips-panel">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">AVAILABLE JOURNEYS</span>
+                    <h2>Select your trip</h2>
+                    <p>
+                        Choose a scheduled shuttle to view its available seats.
+                    </p>
+                </div>
+
+                <span id="tripCount" class="status-pill">0 trips</span>
             </div>
-            <div>
-                <span>Number of seats</span>
-                <strong id="confirmedSeatCount">—</strong>
+
+            <div id="tripResults" class="trip-results">
+                <div class="empty-state">
+                    <span class="empty-icon">↗</span>
+                    <h3>No trips searched yet</h3>
+                    <p>
+                        Enter your route and travel date above to find available trips.
+                    </p>
+                </div>
             </div>
-            <div>
-                <span>Total amount</span>
-                <strong id="confirmedAmount">—</strong>
+
+        </section>
+
+
+        <!-- SEAT SELECTION -->
+
+        <section class="panel seats-panel">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">STEP 02</span>
+                    <h2>Select your seats</h2>
+                    <p>
+                        Choose your preferred seats from the shuttle layout.
+                    </p>
+                </div>
+
+                <span id="seatStatus" class="status-pill">
+                    No trip selected
+                </span>
             </div>
-        </div>
 
-        <a href="passenger-dashboard.html" class="primary-button dashboard-link">
-            View My Bookings
-        </a>
-    </section>
+            <div class="seat-content">
 
-    <footer class="page-footer">
-        <p>© 2026 ShuttleConnect. All rights reserved.</p>
-    </footer>
+                <div class="bus-container">
 
-</main>
+                    <div class="bus-front">
+                        <span class="driver-indicator">
+                            ◉ &nbsp; DRIVER
+                        </span>
+                        <span>FRONT</span>
+                    </div>
 
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+                    <div class="seat-column-labels">
+                        <span>LEFT</span>
+                        <span>RIGHT</span>
+                    </div>
 
-<script src="js/booking.js"></script>
+                    <div id="seatLayout" class="seat-layout">
+                        <div class="seat-placeholder">
+                            Search for a trip and select it to load the seat layout.
+                        </div>
+                    </div>
+
+                    <div class="bus-rear">
+                        REAR OF THE SHUTTLE
+                    </div>
+
+                </div>
+
+
+                <!-- BOOKING SUMMARY -->
+
+                <aside class="booking-summary">
+
+                    <div class="summary-card">
+                        <h3>Seat availability</h3>
+
+                        <div class="legend">
+                            <div>
+                                <span class="legend-box available"></span>
+                                Available
+                            </div>
+
+                            <div>
+                                <span class="legend-box booked"></span>
+                                Booked
+                            </div>
+
+                            <div>
+                                <span class="legend-box selected"></span>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="summary-card">
+                        <h3>Your selection</h3>
+
+                        <div id="selectedSeats" class="selected-seat-list">
+                            <span class="muted-text">No seats selected</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-line">
+                            <span>Selected seats</span>
+                            <strong id="seatCount">0</strong>
+                        </div>
+
+                        <div class="summary-line">
+                            <span>Fare per seat</span>
+                            <strong id="farePerSeat">₹0</strong>
+                        </div>
+
+                        <div class="total-line">
+                            <span>Total amount</span>
+                            <strong id="totalAmount">₹0</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="confirmBookingButton"
+                            class="primary-button confirm-button"
+                            disabled
+                        >
+                            Confirm Booking
+                        </button>
+
+                        <p class="secure-note">
+                            Your booking will be confirmed by the server.
+                        </p>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- BOOKING RESULT -->
+
+        <section
+            id="bookingResult"
+            class="panel booking-result"
+            hidden
+        >
+
+            <div class="success-icon">✓</div>
+
+            <h2>Booking confirmed!</h2>
+
+            <p id="bookingResultMessage">
+                Your shuttle booking has been confirmed.
+            </p>
+
+            <div class="confirmation-details">
+
+                <div>
+                    <span>Booking reference</span>
+                    <strong id="bookingReference">—</strong>
+                </div>
+
+                <div>
+                    <span>Number of seats</span>
+                    <strong id="confirmedSeatCount">—</strong>
+                </div>
+
+                <div>
+                    <span>Total amount</span>
+                    <strong id="confirmedAmount">—</strong>
+                </div>
+
+            </div>
+
+            <a
+                href="passenger-dashboard.html"
+                class="primary-button dashboard-link"
+            >
+                View My Bookings
+            </a>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer class="page-footer">
+            <p>© 2026 ShuttleConnect. All rights reserved.</p>
+        </footer>
+
+    </main>
+
+
+    <!-- TOAST NOTIFICATIONS -->
+
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- NAVIGATION AND PASSENGER PROFILE -->
+
+    <script>
+        const navToggle = document.getElementById("navToggle");
+        const primaryNavigation = document.getElementById("primaryNavigation");
+        const navbar = document.querySelector(".navbar");
+
+        function closeMobileMenu() {
+            primaryNavigation.classList.remove("open");
+            navToggle.setAttribute("aria-expanded", "false");
+            navToggle.setAttribute("aria-label", "Open navigation menu");
+        }
+
+        navToggle.addEventListener("click", () => {
+            const isOpen = primaryNavigation.classList.toggle("open");
+
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+            navToggle.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+        });
+
+        primaryNavigation.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", closeMobileMenu);
+        });
+
+        document.addEventListener("click", event => {
+            if (!navbar.contains(event.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeMobileMenu();
+                navToggle.focus();
+            }
+        });
+
+
+        /* PASSENGER NAVBAR AUTHENTICATION */
+
+        async function loadPassengerNavbar() {
+            const token = localStorage.getItem("token");
+
+            const loginLink = document.getElementById("loginNavLink");
+            const registerLink = document.getElementById("registerNavLink");
+            const profileLink = document.getElementById("profileNavLink");
+            const profileName = document.getElementById("profileNavName");
+            const profileAvatar = document.getElementById("profileAvatar");
+
+            if (!token) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/passenger/profile",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem("token");
+                    return;
+                }
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const result = await response.json();
+
+                const passenger =
+                    result.user ||
+                    result.profile ||
+                    result.data ||
+                    result;
+
+                const name =
+                    passenger.full_name ||
+                    passenger.name ||
+                    passenger.fullName;
+
+                if (!name) {
+                    return;
+                }
+
+                profileName.textContent = name;
+                profileAvatar.textContent =
+                    name.trim().charAt(0).toUpperCase();
+
+                loginLink.hidden = true;
+                registerLink.hidden = true;
+                profileLink.hidden = false;
+
+            } catch (error) {
+                console.error("Unable to load passenger navbar:", error);
+            }
+        }
+
+        loadPassengerNavbar();
+    </script>
+
+
+    <!-- EXISTING BOOKING FUNCTIONALITY - PRESERVED -->
+
+    <script src="js/booking.js"></script>
+
 </body>
 </html>

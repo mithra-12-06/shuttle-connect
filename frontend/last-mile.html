@@ -1,0 +1,793 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Last-Mile Connectivity | ShuttleConnect</title>
+
+    <link rel="stylesheet" href="css/last-mile.css">
+
+    <!-- Last-Mile Navbar Refinements -->
+    <style>
+        /* ==============================
+           DESKTOP NAVBAR
+        ============================== */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            min-height: 72px;
+            padding: 10px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            background: rgba(4, 13, 31, 0.97);
+            border-bottom: 1px solid rgba(240, 192, 64, 0.16);
+            backdrop-filter: blur(16px);
+        }
+
+        .navbar .logo {
+            flex-shrink: 0;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .navbar .nav-links a {
+            padding: 10px 13px;
+            color: #aebbd2;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .navbar .nav-links a:hover,
+        .navbar .nav-links a.active {
+            color: #f0c040;
+        }
+
+        .navbar .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: 2px;
+            left: 13px;
+            right: 13px;
+            height: 2px;
+            background: #f0c040;
+            border-radius: 5px;
+            transform: scaleX(0);
+            transition: transform 0.25s ease;
+        }
+
+        .navbar .nav-links a:hover::after,
+        .navbar .nav-links a.active::after {
+            transform: scaleX(1);
+        }
+
+        .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .navbar .login-link {
+            color: #d7e0f1;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .navbar .login-link:hover {
+            color: #f0c040;
+        }
+
+        .navbar .register-btn {
+            padding: 10px 17px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #dfb63c, #ffc526);
+            color: #111827;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .navbar .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            max-width: 190px;
+            padding: 9px 15px;
+            border: 1px solid rgba(240, 192, 64, 0.35);
+            border-radius: 9px;
+            background: rgba(240, 192, 64, 0.09);
+            color: #f0c040;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .navbar .profile-link:hover {
+            background: rgba(240, 192, 64, 0.16);
+            border-color: #f0c040;
+        }
+
+        .navbar .profile-icon {
+            width: 25px;
+            height: 25px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #f0c040;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* Hamburger is hidden on desktop */
+        .navbar .mobile-nav-toggle {
+            display: none;
+        }
+
+        /* ==============================
+           MOBILE NAVBAR
+        ============================== */
+
+        @media (max-width: 900px) {
+            .navbar {
+                position: sticky;
+                top: 0;
+                min-height: 68px;
+                padding: 12px 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .navbar .mobile-nav-toggle {
+                display: flex;
+                width: 42px;
+                height: 40px;
+                margin-left: auto;
+                padding: 9px;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 5px;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.06);
+                cursor: pointer;
+            }
+
+            .navbar .mobile-nav-toggle span {
+                display: block;
+                width: 100%;
+                height: 2px;
+                border-radius: 2px;
+                background: #f0c040;
+                transition: all 0.2s ease;
+            }
+
+            .navbar .mobile-nav-toggle[aria-expanded="true"] span:first-child {
+                transform: translateY(7px) rotate(45deg);
+            }
+
+            .navbar .mobile-nav-toggle[aria-expanded="true"] span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .navbar .mobile-nav-toggle[aria-expanded="true"] span:last-child {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+            .navbar .nav-links {
+                display: none;
+                order: 3;
+                flex: 0 0 100%;
+                width: 100%;
+                align-items: stretch;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 3px;
+                padding: 10px 0 5px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .navbar.menu-open .nav-links {
+                display: flex;
+            }
+
+            .navbar .nav-links a {
+                display: block;
+                width: 100%;
+                padding: 12px 14px;
+                border-radius: 8px;
+            }
+
+            .navbar .nav-links a:hover,
+            .navbar .nav-links a.active {
+                background: rgba(240, 192, 64, 0.08);
+            }
+
+            .navbar .nav-links a::after {
+                display: none;
+            }
+
+            /* Account links are hidden until the menu opens */
+            .navbar .nav-actions {
+                display: none;
+                order: 4;
+                flex: 0 0 100%;
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                padding: 8px 0 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .navbar.menu-open .nav-actions {
+                display: flex;
+            }
+
+            .navbar .nav-actions a {
+                padding: 10px 14px;
+            }
+
+            .navbar .profile-link {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 11px 14px;
+            }
+
+            .navbar .logo {
+                font-size: 18px;
+            }
+
+            .navbar .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="brand-label">
+            <span class="brand-dot"></span>
+            ROYAL EXECUTIVE COMMUTES • 100% ELECTRIC
+        </div>
+
+        <div class="header-right">
+            <span>Public Prestige Portal</span>
+            <span class="header-status">● Online</span>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar" aria-label="Main navigation">
+
+        <a href="index.html" class="logo" aria-label="ShuttleConnect home">
+            <span class="logo-icon">S</span>
+            <span class="logo-wordmark">
+                Shuttle<span class="logo-connect">Connect</span>
+            </span>
+        </a>
+
+        <!-- Mobile-only hamburger -->
+        <button
+            class="mobile-nav-toggle"
+            id="mobileNavToggle"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="primaryNavLinks"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Navigation links -->
+        <div class="nav-links" id="primaryNavLinks">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#experience">About Us</a>
+            <a href="booking.html">Bookings</a>
+            <a href="last-mile.html" class="active">Last-Mile</a>
+            <a href="passenger-dashboard.html">My Bookings</a>
+        </div>
+
+        <!-- Account links -->
+        <div class="nav-actions" id="navActions">
+
+            <a href="login.html" class="login-link" id="loginNavLink">
+                Login
+            </a>
+
+            <a href="register.html" class="register-btn" id="registerNavLink">
+                Register
+            </a>
+
+            <a
+                href="passenger-dashboard.html"
+                class="profile-link"
+                id="profileNavLink"
+                hidden
+            >
+                <span class="profile-icon" id="profileInitial">P</span>
+                <span id="profileName">Profile</span>
+            </a>
+
+        </div>
+
+    </nav>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="lastmile-hero">
+
+            <div class="hero-content">
+                <span class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    CONNECTING EVERY LAST MILE
+                </span>
+
+                <h1>
+                    Your Journey Doesn't
+                    End at the <span>Shuttle Stop.</span>
+                </h1>
+
+                <p>
+                    We've brought you closer to your destination.
+                    Now explore convenient onward travel options
+                    to complete your journey with ease.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#transport-options" class="btn-primary">
+                        Explore Transport Options
+                        <span>→</span>
+                    </a>
+
+                    <a href="booking.html" class="btn-secondary">
+                        Book a Shuttle
+                    </a>
+                </div>
+
+                <div class="hero-highlights">
+                    <div class="highlight">
+                        <span class="highlight-icon">🚐</span>
+                        <div>
+                            <strong>Seamless Travel</strong>
+                            <small>From shuttle stop to destination</small>
+                        </div>
+                    </div>
+
+                    <div class="highlight">
+                        <span class="highlight-icon">📍</span>
+                        <div>
+                            <strong>Local Connectivity</strong>
+                            <small>Explore onward travel choices</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-glow"></div>
+
+                <div class="journey-card">
+                    <div class="journey-card-header">
+                        <span class="journey-label">YOUR JOURNEY</span>
+                        <span class="journey-status">● CONNECTED</span>
+                    </div>
+
+                    <div class="journey-route">
+                        <div class="route-point">
+                            <span class="route-icon shuttle-icon">🚌</span>
+                            <div>
+                                <small>SHUTTLE DROP-OFF</small>
+                                <strong>Shuttle Stop</strong>
+                            </div>
+                        </div>
+
+                        <div class="route-connector">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                        <div class="route-point">
+                            <span class="route-icon destination-icon">📍</span>
+                            <div>
+                                <small>YOUR FINAL DESTINATION</small>
+                                <strong>Almost There!</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="journey-card-footer">
+                        <span>One journey.</span>
+                        <strong>Every connection matters.</strong>
+                    </div>
+                </div>
+
+                <div class="floating-badge badge-top">
+                    <span>⚡</span> Smarter Connections
+                </div>
+
+                <div class="floating-badge badge-bottom">
+                    <span>✦</span> Travel Beyond the Stop
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Location Section -->
+        <section class="location-section">
+
+            <div class="section-heading">
+                <span class="section-eyebrow">PLAN YOUR NEXT CONNECTION</span>
+                <h2>Where are you <span>heading next?</span></h2>
+                <p>
+                    Select your shuttle drop-off area to see the
+                    onward travel options you can consider.
+                </p>
+            </div>
+
+            <div class="location-panel">
+
+                <div class="location-icon">📍</div>
+
+                <div class="location-field">
+                    <label for="dropoffLocation">
+                        SELECT YOUR SHUTTLE DROP-OFF AREA
+                    </label>
+
+                    <select id="dropoffLocation">
+                        <option value="">Choose your drop-off location</option>
+                        <option value="Kovilambakkam Hub">Kovilambakkam Hub</option>
+                        <option value="Sholinganallur">Sholinganallur</option>
+                        <option value="Siruseri IT Park">Siruseri IT Park</option>
+                        <option value="OMR Phase II">OMR Phase II</option>
+                        <option value="Perungudi">Perungudi</option>
+                    </select>
+
+                    <small id="locationMessage">
+                        Choose the destination where your shuttle journey ends.
+                    </small>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Transport Options -->
+        <section class="transport-section" id="transport-options">
+
+            <div class="section-heading">
+                <span class="section-eyebrow">YOUR LAST-MILE OPTIONS</span>
+                <h2>Choose how you want to <span>get there.</span></h2>
+                <p>
+                    Explore different ways to travel from your shuttle
+                    drop-off point to your final destination.
+                </p>
+            </div>
+
+            <div class="transport-grid">
+
+                <article class="transport-card">
+                    <div class="transport-icon auto-icon">🛺</div>
+                    <span class="transport-tag">SHORT DISTANCES</span>
+                    <h3>Auto Rickshaw</h3>
+                    <p>
+                        A convenient option for nearby streets,
+                        residential areas and quick local connections.
+                    </p>
+                    <div class="transport-footer">
+                        <span>Flexible local travel</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                </article>
+
+                <article class="transport-card">
+                    <div class="transport-icon cab-icon">🚕</div>
+                    <span class="transport-tag">COMFORTABLE TRAVEL</span>
+                    <h3>Cab Services</h3>
+                    <p>
+                        Consider a private cab for comfortable
+                        onward travel, especially with luggage.
+                    </p>
+                    <div class="transport-footer">
+                        <span>Door-to-door convenience</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                </article>
+
+                <article class="transport-card">
+                    <div class="transport-icon public-icon">🚇</div>
+                    <span class="transport-tag">PUBLIC CONNECTIVITY</span>
+                    <h3>Public Transport</h3>
+                    <p>
+                        Explore available bus and metro connections
+                        for reaching nearby areas and city destinations.
+                    </p>
+                    <div class="transport-footer">
+                        <span>Public travel options</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                </article>
+
+                <article class="transport-card">
+                    <div class="transport-icon walk-icon">🚶</div>
+                    <span class="transport-tag">NEARBY DESTINATIONS</span>
+                    <h3>Walking</h3>
+                    <p>
+                        For destinations close to your drop-off point,
+                        walking may be a simple final connection.
+                    </p>
+                    <div class="transport-footer">
+                        <span>Simple short-distance travel</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                </article>
+
+            </div>
+
+            <p class="availability-note">
+                <span>ⓘ</span>
+                Transport options are provided for guidance only.
+                Availability, fares and routes must be confirmed with
+                the respective transport providers.
+            </p>
+
+        </section>
+
+        <!-- Journey Completion Section -->
+        <section class="journey-cta">
+
+            <div class="cta-decoration">✦</div>
+
+            <div class="cta-content">
+                <span class="section-eyebrow">
+                    THE COMPLETE TRAVEL EXPERIENCE
+                </span>
+
+                <h2>
+                    Every Mile Matters.<br>
+                    <span>Make Every Journey Count.</span>
+                </h2>
+
+                <p>
+                    Start your journey with ShuttleConnect and make
+                    your daily commute simpler from beginning to end.
+                </p>
+
+                <a href="booking.html" class="btn-primary">
+                    Find Your Shuttle
+                    <span>→</span>
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <div class="footer-brand">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">S</span>
+                <span class="logo-wordmark">
+                    Shuttle<span class="logo-connect">Connect</span>
+                </span>
+            </a>
+
+            <p>
+                Connecting your commute with comfort,
+                convenience and confidence.
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="booking.html">Bookings</a>
+            <a href="last-mile.html">Last-Mile</a>
+            <a href="login.html">Login</a>
+        </div>
+
+        <div class="footer-bottom">
+            © 2026 ShuttleConnect. All rights reserved.
+        </div>
+
+    </footer>
+
+    <script>
+        "use strict";
+
+        // ==========================================
+        // MOBILE NAVIGATION
+        // ==========================================
+
+        const mobileNavToggle =
+            document.getElementById("mobileNavToggle");
+
+        const navbar =
+            document.querySelector(".navbar");
+
+        const navLinks =
+            document.querySelectorAll("#primaryNavLinks a");
+
+        function closeMobileNavigation() {
+            navbar.classList.remove("menu-open");
+
+            mobileNavToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            mobileNavToggle.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+        }
+
+        mobileNavToggle.addEventListener("click", () => {
+            const isOpen =
+                navbar.classList.toggle("menu-open");
+
+            mobileNavToggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            mobileNavToggle.setAttribute(
+                "aria-label",
+                isOpen
+                    ? "Close navigation menu"
+                    : "Open navigation menu"
+            );
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener("click", closeMobileNavigation);
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeMobileNavigation();
+            }
+        });
+
+        // ==========================================
+        // PASSENGER PROFILE NAVIGATION
+        // ==========================================
+
+        const loginNavLink =
+            document.getElementById("loginNavLink");
+
+        const registerNavLink =
+            document.getElementById("registerNavLink");
+
+        const profileNavLink =
+            document.getElementById("profileNavLink");
+
+        const profileName =
+            document.getElementById("profileName");
+
+        const profileInitial =
+            document.getElementById("profileInitial");
+
+        async function loadPassengerNavigation() {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/passenger/profile",
+                    {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem("token");
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error("Unable to load passenger profile.");
+                }
+
+                const result = await response.json();
+
+                const passenger =
+                    result.user ||
+                    result.profile ||
+                    result.data ||
+                    result;
+
+                const passengerName =
+                    passenger.full_name ||
+                    passenger.name ||
+                    passenger.fullName;
+
+                if (!passengerName) {
+                    throw new Error("Passenger name was not returned by the server.");
+                }
+
+                // Replace Login and Register with the actual passenger name.
+                loginNavLink.hidden = true;
+                registerNavLink.hidden = true;
+
+                profileNavLink.hidden = false;
+
+                profileName.textContent = passengerName;
+                profileInitial.textContent =
+                    passengerName.trim().charAt(0).toUpperCase();
+
+                profileNavLink.setAttribute(
+                    "aria-label",
+                    `Open profile for ${passengerName}`
+                );
+
+            } catch (error) {
+                console.error("Passenger navigation:", error);
+            }
+        }
+
+        loadPassengerNavigation();
+
+        // ==========================================
+        // DROP-OFF LOCATION SELECTION
+        // ==========================================
+
+        const dropoffLocation =
+            document.getElementById("dropoffLocation");
+
+        const locationMessage =
+            document.getElementById("locationMessage");
+
+        dropoffLocation.addEventListener("change", () => {
+            if (dropoffLocation.value) {
+                locationMessage.textContent =
+                    "Your selected shuttle drop-off area is " +
+                    dropoffLocation.value +
+                    ". Explore the onward travel options below.";
+            } else {
+                locationMessage.textContent =
+                    "Choose the destination where your shuttle journey ends.";
+            }
+        });
+    </script>
+
+</body>
+</html>

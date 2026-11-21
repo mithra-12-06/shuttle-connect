@@ -6,7 +6,7 @@
 // ======================================================
 
 const API_BASE_URL = "http://localhost:3000/api";
-const MAX_SEATS_PER_BOOKING = 4;
+const MAX_SEATS_PER_BOOKING = 20;
 
 // ======================================================
 // APPLICATION STATE
@@ -69,12 +69,7 @@ function getLocalDateString() {
 }
 
 function getAuthToken() {
-    return (
-        localStorage.getItem("token") ||
-        localStorage.getItem("authToken") ||
-        localStorage.getItem("jwtToken") ||
-        localStorage.getItem("accessToken")
-    );
+    return localStorage.getItem("token");
 }
 
 function formatCurrency(amount) {
@@ -344,6 +339,7 @@ function renderTrips(trips) {
         const fare = Number(
             trip.fare_per_seat ?? trip.fare ?? 0
         );
+        const availableSeats = Number(trip.available_seats);
 
         const card = document.createElement("article");
 
@@ -382,6 +378,11 @@ function renderTrips(trips) {
                     ${formatCurrency(fare)}
                 </div>
                 <small class="muted-text">Per seat</small>
+            </div>
+
+            <div class="trip-detail">
+                <span>Available seats</span>
+                <strong>${Number.isFinite(availableSeats) ? escapeHTML(availableSeats) : "Not specified"}</strong>
             </div>
 
             <button type="button" class="select-trip-button">
@@ -569,6 +570,12 @@ function addSeatToRow(row, seat) {
     }`;
 
     button.disabled = isBooked;
+    button.setAttribute(
+        "aria-label",
+        isBooked
+            ? `Seat ${seatNumber} is booked`
+            : `Seat ${seatNumber}${isSelected ? ", selected" : ", available"}`
+    );
 
     button.title = isBooked
         ? `Seat ${seatNumber} is booked`
