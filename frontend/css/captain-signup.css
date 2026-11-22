@@ -1,0 +1,127 @@
+
+/* =========================================================
+   DOCUMENT UPLOAD CONTROLS
+   Added for Captain Application document selection
+========================================================= */
+
+.document-upload {
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.document-upload-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.document-upload-content strong {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.document-upload-content > p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.document-upload .document-icon {
+    flex-shrink: 0;
+}
+
+.upload-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border: 1px solid rgba(112, 65, 166, 0.2);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.upload-label:hover {
+    background: var(--purple);
+    color: var(--white);
+}
+
+.document-upload input[type="file"] {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 12px;
+    padding: 9px;
+    background: var(--white);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.document-upload input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 7px 10px;
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.document-upload input[type="file"]::file-selector-button:hover {
+    background: #e6d9fa;
+}
+
+.document-upload input[type="file"]:focus-visible,
+.upload-label:focus-visible {
+    outline: 3px solid rgba(112, 65, 166, 0.25);
+    outline-offset: 3px;
+}
+
+.document-upload .file-selection-status {
+    margin-top: 9px;
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.upload-format-note {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* Responsive document upload layout */
+@media (max-width: 600px) {
+    .document-upload {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .document-upload-content {
+        width: 100%;
+    }
+
+    .document-upload input[type="file"] {
+        max-width: 100%;
+    }
+
+    .upload-label {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

@@ -28,6 +28,7 @@ async function searchTrips(req, res, requestUrl, sendJson) {
                 t.trip_status,
                 r.origin,
                 r.destination,
+                v.vehicle_model,
                 v.seating_capacity,
                 (
                     SELECT COUNT(DISTINCT bs.seat_number)

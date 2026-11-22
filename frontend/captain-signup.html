@@ -1,0 +1,649 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7041A6">
+
+    <title>Captain Application | ShuttleConnect</title>
+
+    <link rel="stylesheet" href="css/captain-signup.css">
+</head>
+
+<body>
+
+    <main class="application-page">
+
+        <!-- HEADER -->
+        <header class="application-header">
+
+            <a href="captain-dashboard.html" class="brand-logo">
+                <div class="brand-icon">S</div>
+                <span>ShuttleConnect</span>
+            </a>
+
+            <a href="captain-dashboard.html" class="back-to-login">
+                Already registered? Sign in →
+            </a>
+
+        </header>
+
+
+        <!-- APPLICATION INTRODUCTION -->
+        <section class="application-intro">
+
+            <span class="intro-label">JOIN OUR CAPTAIN NETWORK</span>
+
+            <h1>Drive with ShuttleConnect.</h1>
+
+            <p>
+                Become part of a growing mobility network.
+                Complete your application and our team will
+                review your details before account activation.
+            </p>
+
+            <div class="application-steps">
+
+                <div class="step">
+                    <span>01</span>
+                    <p>Apply</p>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step">
+                    <span>02</span>
+                    <p>Verification</p>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step">
+                    <span>03</span>
+                    <p>Activation</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- APPLICATION FORM -->
+        <section class="application-container">
+
+            <form id="captainApplicationForm" novalidate>
+
+                <!-- SECTION 01: PERSONAL INFORMATION -->
+                <div class="form-section">
+
+                    <div class="section-heading">
+
+                        <span class="section-number">01</span>
+
+                        <div>
+                            <h2>Personal Information</h2>
+                            <p>Tell us a little about yourself.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label for="captainName">
+                                Full Name <span>*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="captainName"
+                                name="fullName"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="captainSignupEmail">
+                                Email Address <span>*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="captainSignupEmail"
+                                name="email"
+                                placeholder="example@email.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="captainMobile">
+                                Mobile Number <span>*</span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="captainMobile"
+                                name="mobile"
+                                placeholder="Enter your mobile number"
+                                autocomplete="tel"
+                                inputmode="numeric"
+                                maxlength="10"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="captainAddress">
+                                Residential Address <span>*</span>
+                            </label>
+
+                            <textarea
+                                id="captainAddress"
+                                name="address"
+                                placeholder="Enter your residential address"
+                                rows="3"
+                                autocomplete="street-address"
+                                required
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECTION 02: VEHICLE INFORMATION -->
+                <div class="form-section">
+
+                    <div class="section-heading">
+
+                        <span class="section-number">02</span>
+
+                        <div>
+                            <h2>Vehicle Information</h2>
+                            <p>Tell us about the vehicle you will operate.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="vehicleCategory">
+                                Vehicle Category <span>*</span>
+                            </label>
+
+                            <select
+                                id="vehicleCategory"
+                                name="vehicleCategory"
+                                required
+                            >
+
+                                <option value="" disabled selected>
+                                    Select vehicle category
+                                </option>
+
+                                <option value="two_wheeler">
+                                    Two-Wheeler
+                                </option>
+
+                                <option value="auto">
+                                    Auto-Rickshaw
+                                </option>
+
+                                <option value="car">
+                                    Car
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="vehicleRegistration">
+                                Vehicle Registration Number <span>*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicleRegistration"
+                                name="vehicleRegistration"
+                                placeholder="e.g. TN 00 AB 1234"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="vehicleModel">
+                                Vehicle Make and Model <span>*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicleModel"
+                                name="vehicleModel"
+                                placeholder="e.g. Honda Activa"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="vehicleYear">
+                                Manufacturing Year
+                            </label>
+
+                            <input
+                                type="number"
+                                id="vehicleYear"
+                                name="vehicleYear"
+                                placeholder="e.g. 2023"
+                                min="1990"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECTION 03: DRIVING LICENCE INFORMATION -->
+                <div class="form-section">
+
+                    <div class="section-heading">
+
+                        <span class="section-number">03</span>
+
+                        <div>
+                            <h2>Driving Licence Information</h2>
+                            <p>Provide your valid driving licence details.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="licenceNumber">
+                                Driving Licence Number <span>*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="licenceNumber"
+                                name="licenceNumber"
+                                placeholder="Enter your licence number"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="licenceExpiry">
+                                Licence Expiry Date <span>*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                id="licenceExpiry"
+                                name="licenceExpiry"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECTION 04: DOCUMENT VERIFICATION -->
+                <div class="form-section">
+
+                    <div class="section-heading">
+
+                        <span class="section-number">04</span>
+
+                        <div>
+                            <h2>Verification Documents</h2>
+                            <p>Select the documents required for captain verification.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="document-notice">
+
+                        <span>ℹ</span>
+
+                        <p>
+                            You can select your documents below. This demonstration
+                            currently validates files in your browser only.
+                            Documents are not uploaded to a server or saved.
+                            Secure backend document storage and admin verification
+                            must be implemented before real applications are accepted.
+                        </p>
+
+                    </div>
+
+
+                    <div class="document-list">
+
+                        <!-- DRIVING LICENCE -->
+                        <div class="document-item document-upload">
+
+                            <span class="document-icon">01</span>
+
+                            <div class="document-upload-content">
+
+                                <strong>Driving Licence</strong>
+
+                                <p>
+                                    Select a clear copy of your valid driving licence.
+                                </p>
+
+                                <label for="drivingLicenceFile" class="upload-label">
+                                    Choose Driving Licence
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="drivingLicenceFile"
+                                    name="drivingLicenceFile"
+                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                    aria-describedby="drivingLicenceFileName uploadFormatNote"
+                                >
+
+                                <p
+                                    id="drivingLicenceFileName"
+                                    class="file-selection-status"
+                                    aria-live="polite"
+                                >
+                                    No file selected
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- VEHICLE REGISTRATION CERTIFICATE -->
+                        <div class="document-item document-upload">
+
+                            <span class="document-icon">02</span>
+
+                            <div class="document-upload-content">
+
+                                <strong>Vehicle Registration Certificate (RC)</strong>
+
+                                <p>
+                                    Select your vehicle registration certificate.
+                                </p>
+
+                                <label for="vehicleRcFile" class="upload-label">
+                                    Choose Vehicle RC
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="vehicleRcFile"
+                                    name="vehicleRcFile"
+                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                    aria-describedby="vehicleRcFileName uploadFormatNote"
+                                >
+
+                                <p
+                                    id="vehicleRcFileName"
+                                    class="file-selection-status"
+                                    aria-live="polite"
+                                >
+                                    No file selected
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- VEHICLE INSURANCE -->
+                        <div class="document-item document-upload">
+
+                            <span class="document-icon">03</span>
+
+                            <div class="document-upload-content">
+
+                                <strong>Vehicle Insurance</strong>
+
+                                <p>
+                                    Select your valid vehicle insurance document.
+                                </p>
+
+                                <label for="vehicleInsuranceFile" class="upload-label">
+                                    Choose Vehicle Insurance
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="vehicleInsuranceFile"
+                                    name="vehicleInsuranceFile"
+                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                    aria-describedby="vehicleInsuranceFileName uploadFormatNote"
+                                >
+
+                                <p
+                                    id="vehicleInsuranceFileName"
+                                    class="file-selection-status"
+                                    aria-live="polite"
+                                >
+                                    No file selected
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <p id="uploadFormatNote" class="upload-format-note">
+                        Accepted formats: PDF, JPG, JPEG and PNG.
+                        Maximum size: 5 MB per file.
+                        Document selection is optional in this local demonstration.
+                    </p>
+
+                </div>
+
+
+                <!-- SECTION 05: CAPTAIN AGREEMENTS -->
+                <div class="form-section terms-section">
+
+                    <div class="section-heading">
+
+                        <span class="section-number">05</span>
+
+                        <div>
+                            <h2>Captain Agreements</h2>
+                            <p>Review our policies before applying.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="agreement-list">
+
+                        <label class="agreement-item">
+
+                            <input
+                                type="checkbox"
+                                id="captainTermsAgreement"
+                                name="termsAccepted"
+                                required
+                            >
+
+                            <span>
+                                I have read and agree to the
+
+                                <a
+                                    href="captain-terms.html"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Captain Terms &amp; Conditions
+                                </a>,
+
+                                including the 15% company commission
+                                and 85% captain share.
+
+                                <strong>*</strong>
+                            </span>
+
+                        </label>
+
+
+                        <label class="agreement-item">
+
+                            <input
+                                type="checkbox"
+                                id="captainPrivacyAgreement"
+                                name="privacyAccepted"
+                                required
+                            >
+
+                            <span>
+                                I have read and agree to the
+
+                                <a
+                                    href="captain-privacy.html"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Captain Privacy Policy
+                                </a>.
+
+                                <strong>*</strong>
+                            </span>
+
+                        </label>
+
+
+                        <label class="agreement-item">
+
+                            <input
+                                type="checkbox"
+                                id="captainAccuracyAgreement"
+                                name="informationAccurate"
+                                required
+                            >
+
+                            <span>
+                                I confirm that the information provided
+                                in this application is accurate and
+                                complete.
+
+                                <strong>*</strong>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="approval-notice">
+
+                        <span>🔐</span>
+
+                        <p>
+                            Submitting this application does not
+                            automatically activate your captain account.
+                            Your details must be reviewed and approved
+                            by the ShuttleConnect administration team.
+                            Only verified and approved captains can
+                            become eligible to receive rides.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM SUBMISSION -->
+                <div class="form-submit-section">
+
+                    <p
+                        id="applicationMessage"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+                    <button
+                        type="submit"
+                        id="applicationSubmitButton"
+                    >
+                        Submit Application
+                        <span>→</span>
+                    </button>
+
+                    <p class="submit-note">
+                        Fields marked with * are mandatory.
+                    </p>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="application-footer">
+
+            <span>
+                © 2026 ShuttleConnect. All rights reserved.
+            </span>
+
+            <a href="captain-dashboard.html">
+                Return to Captain Login
+            </a>
+
+        </footer>
+
+    </main>
+
+
+    <script src="js/captain-signup.js"></script>
+
+</body>
+
+</html>

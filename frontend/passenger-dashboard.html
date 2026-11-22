@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,74 +8,194 @@
   <meta name="description" content="View your ShuttleConnect passenger profile and bookings.">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="dashboard-page">
+
+  <!-- PASSENGER DASHBOARD HEADER -->
   <header class="dashboard-header">
+
     <a href="index.html" class="logo" aria-label="ShuttleConnect home">
       <span class="logo-icon">S</span>
       Shuttle<span>Connect</span>
     </a>
 
-    <button type="button" class="dashboard-nav-toggle" id="dashboardNavToggle"
-      aria-controls="dashboardNavigation" aria-expanded="false" aria-label="Open navigation menu">
-      <span></span><span></span><span></span>
+    <!-- MOBILE NAVIGATION TOGGLE -->
+    <button
+      type="button"
+      class="dashboard-nav-toggle"
+      id="dashboardNavToggle"
+      aria-controls="dashboardNavigation"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
 
-    <nav class="dashboard-navigation" id="dashboardNavigation" aria-label="Primary navigation">
+    <!-- MAIN NAVIGATION -->
+    <nav
+      class="dashboard-navigation"
+      id="dashboardNavigation"
+      aria-label="Primary navigation"
+    >
       <a href="index.html">Home</a>
-      <a href="booking.html">Book a Journey</a>
+      <a href="index.html#about">About Us</a>
+      <a href="last-mile.html">Last-Mile</a>
+      <a href="booking.html">Bookings</a>
       <a href="passenger-dashboard.html" class="active">My Bookings</a>
     </nav>
 
-    <button type="button" class="dashboard-logout" id="logoutButton">Logout</button>
+    <!-- LOGOUT -->
+    <button
+      type="button"
+      class="dashboard-logout"
+      id="logoutButton"
+    >
+      Logout
+    </button>
+
   </header>
 
+
+  <!-- MAIN DASHBOARD CONTENT -->
   <main class="dashboard-container">
+
+    <!-- WELCOME SECTION -->
     <section class="dashboard-welcome">
+
       <div>
         <p class="dashboard-kicker">PASSENGER DASHBOARD</p>
+
         <h1 id="welcomeHeading">Welcome</h1>
-        <p>Review your profile and manage your confirmed journeys.</p>
+
+        <p>
+          Review your profile and manage your confirmed journeys.
+        </p>
       </div>
-      <a href="booking.html" class="dashboard-primary-link">Book a Journey</a>
+
+      <a
+        href="booking.html"
+        class="dashboard-primary-link"
+      >
+        Book a Journey
+      </a>
+
     </section>
 
-    <div id="dashboardMessage" class="dashboard-message" role="status" aria-live="polite"></div>
 
-    <section class="profile-card" aria-labelledby="profileHeading">
+    <!-- DASHBOARD MESSAGE -->
+    <div
+      id="dashboardMessage"
+      class="dashboard-message"
+      role="status"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- PASSENGER PROFILE -->
+    <section
+      class="profile-card"
+      aria-labelledby="profileHeading"
+    >
+
       <div>
         <p class="dashboard-kicker">PROFILE</p>
+
         <h2 id="profileHeading">Passenger details</h2>
       </div>
-      <div class="profile-details" id="profileDetails">
+
+      <div
+        class="profile-details"
+        id="profileDetails"
+      >
         <p>Loading profile...</p>
       </div>
+
     </section>
 
-    <section class="booking-section" aria-labelledby="bookingsHeading">
+
+    <!-- BOOKING HISTORY -->
+    <section
+      class="booking-section"
+      aria-labelledby="bookingsHeading"
+    >
+
       <div class="booking-section-heading">
+
         <div>
           <p class="dashboard-kicker">JOURNEY HISTORY</p>
+
           <h2 id="bookingsHeading">My bookings</h2>
         </div>
-        <div class="booking-tabs" role="tablist" aria-label="Booking status">
-          <button type="button" class="booking-tab active" id="upcomingTab"
-            data-booking-view="upcoming" role="tab" aria-selected="true">Upcoming</button>
-          <button type="button" class="booking-tab" id="previousTab"
-            data-booking-view="previous" role="tab" aria-selected="false">Previous</button>
+
+        <!-- UPCOMING / PREVIOUS TABS -->
+        <div
+          class="booking-tabs"
+          role="tablist"
+          aria-label="Booking status"
+        >
+
+          <button
+            type="button"
+            class="booking-tab active"
+            id="upcomingTab"
+            data-booking-view="upcoming"
+            role="tab"
+            aria-selected="true"
+          >
+            Upcoming
+          </button>
+
+          <button
+            type="button"
+            class="booking-tab"
+            id="previousTab"
+            data-booking-view="previous"
+            role="tab"
+            aria-selected="false"
+          >
+            Previous
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- BOOKING LIST -->
+      <div
+        id="bookingList"
+        class="booking-list"
+        aria-live="polite"
+      >
+        <div class="dashboard-empty">
+          Loading bookings...
         </div>
       </div>
 
-      <div id="bookingList" class="booking-list" aria-live="polite">
-        <div class="dashboard-empty">Loading bookings...</div>
-      </div>
     </section>
+
   </main>
 
+
+  <!-- FOOTER -->
   <footer class="dashboard-footer">
     <p>ShuttleConnect</p>
   </footer>
 
-  <div id="dashboardToast" class="dashboard-toast" role="status" aria-live="polite"></div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div
+    id="dashboardToast"
+    class="dashboard-toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+
+  <!-- EXISTING DASHBOARD JAVASCRIPT -->
   <script src="js/passenger.js"></script>
+
 </body>
 </html>

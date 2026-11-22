@@ -136,7 +136,6 @@
             font-weight: 800;
         }
 
-        /* Hamburger is hidden on desktop */
         .navbar .mobile-nav-toggle {
             display: none;
         }
@@ -225,7 +224,6 @@
                 display: none;
             }
 
-            /* Account links are hidden until the menu opens */
             .navbar .nav-actions {
                 display: none;
                 order: 4;
@@ -313,7 +311,7 @@
             <a href="index.html#experience">About Us</a>
             <a href="booking.html">Bookings</a>
             <a href="last-mile.html" class="active">Last-Mile</a>
-            <a href="passenger-dashboard.html">My Bookings</a>
+
         </div>
 
         <!-- Account links -->
@@ -364,14 +362,17 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <a href="#transport-options" class="btn-primary">
-                        Explore Transport Options
+
+                    <!-- Navigate to Last-Mile Services Booking Page -->
+                    <a href="last-mile-bookings.html" class="btn-primary">
+                        Book Your Last-Mile Ride
                         <span>→</span>
                     </a>
 
                     <a href="booking.html" class="btn-secondary">
                         Book a Shuttle
                     </a>
+
                 </div>
 
                 <div class="hero-highlights">
@@ -744,7 +745,6 @@
                     throw new Error("Passenger name was not returned by the server.");
                 }
 
-                // Replace Login and Register with the actual passenger name.
                 loginNavLink.hidden = true;
                 registerNavLink.hidden = true;
 

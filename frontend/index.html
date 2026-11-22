@@ -2,1459 +2,1244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>ShuttleConnect | Royal Executive Travel</title>
-  <meta name="description" content="ShuttleConnect — Experience comfortable executive shuttle travel with premium seating and convenient digital booking.">
-
-  <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/home.css">
-
-  <style>
-    /* =========================================
-       HERO SECTION
-    ========================================= */
-
-    .hero-full {
-      width: 100%;
-      min-height: 480px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      background: url('assets/bus_terminus.jpg') center / cover no-repeat;
-      overflow: hidden;
-      border-radius: 0;
-      margin: 0;
-    }
-
-    .hero-full::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        100deg,
-        rgba(3,10,30,0.90) 0%,
-        rgba(3,10,30,0.65) 45%,
-        rgba(3,10,30,0.35) 100%
-      );
-    }
-
-    .hero-full::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        0deg,
-        rgba(3,10,30,0.95) 0%,
-        transparent 60%
-      );
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 40px;
-      width: 100%;
-    }
-
-    /* =========================================
-       NAVBAR
-    ========================================= */
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      min-height: 70px;
-      padding: 12px 5%;
-      background: rgba(4, 13, 31, 0.96);
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      backdrop-filter: blur(16px);
-    }
-
-    .navbar .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      text-decoration: none;
-      color: #ffffff;
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .navbar .logo-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #f0c040, #e8a800);
-      color: #071432;
-      font-weight: 900;
-    }
-
-    .logo-wordmark {
-      color: #ffffff;
-    }
-
-    .logo-connect {
-      color: #f0c040;
-    }
-
-    .navbar .nav-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 28px;
-    }
-
-    .navbar .nav-links a {
-      color: #c4cde0;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      transition: color 0.25s ease;
-    }
-
-    .navbar .nav-links a:hover,
-    .navbar .nav-links a.active {
-      color: #f0c040;
-    }
-
-    .navbar .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .navbar .login-link {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 10px 14px;
-      transition: color 0.25s ease;
-    }
-
-    .navbar .login-link:hover {
-      color: #f0c040;
-    }
-
-    .navbar .register-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 11px 18px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #dfb63c, #ffc526);
-      color: #071432;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 800;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .navbar .register-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(240,192,64,0.25);
-    }
-
-    .navbar .profile-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 15px;
-      border: 1px solid rgba(240,192,64,0.35);
-      border-radius: 9px;
-      color: #f0c040;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      transition: background 0.25s ease;
-      max-width: 190px;
-    }
-
-    .navbar .profile-link:hover {
-      background: rgba(240,192,64,0.10);
-    }
-
-    .profile-link[hidden],
-    .nav-actions a[hidden] {
-      display: none !important;
-    }
-
-    .profile-avatar {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      background: rgba(240,192,64,0.18);
-      color: #f0c040;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    /* Hamburger is hidden on desktop */
-    .mobile-nav-toggle {
-      display: none;
-      width: 42px;
-      height: 42px;
-      padding: 9px;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 9px;
-      background: rgba(255,255,255,0.06);
-      cursor: pointer;
-    }
-
-    .mobile-nav-toggle span {
-      display: block;
-      height: 2px;
-      width: 100%;
-      margin: 5px 0;
-      border-radius: 3px;
-      background: #ffffff;
-      transition: 0.25s ease;
-    }
-
-    /* =========================================
-       PREMIUM TRAVEL HIGHLIGHTS
-    ========================================= */
-
-    .premium-highlights {
-      max-width: 1200px;
-      margin: 55px auto;
-      padding: 0 24px;
-    }
-
-    .premium-panel {
-      position: relative;
-      overflow: hidden;
-      padding: 42px;
-      border: 1px solid rgba(240,192,64,0.20);
-      border-radius: 22px;
-      background:
-        radial-gradient(
-          circle at 90% 10%,
-          rgba(240,192,64,0.12),
-          transparent 35%
-        ),
-        linear-gradient(
-          135deg,
-          rgba(7,20,50,0.98),
-          rgba(5,14,35,0.98)
-        );
-      box-shadow: 0 18px 45px rgba(0,0,0,0.20);
-    }
-
-    .premium-eyebrow {
-      display: inline-block;
-      margin-bottom: 14px;
-      color: #f0c040;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .premium-heading {
-      max-width: 650px;
-      margin: 0 0 12px;
-      color: #ffffff;
-      font-size: clamp(26px, 4vw, 38px);
-      font-weight: 900;
-      line-height: 1.2;
-      letter-spacing: -0.8px;
-    }
-
-    .premium-heading span {
-      color: #f0c040;
-    }
-
-    .premium-description {
-      max-width: 650px;
-      margin: 0;
-      color: #aab8d1;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .premium-feature-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 32px;
-    }
-
-    .premium-feature-card {
-      min-height: 175px;
-      padding: 22px 18px;
-      border: 1px solid rgba(255,255,255,0.11);
-      border-radius: 15px;
-      background: rgba(255,255,255,0.055);
-      backdrop-filter: blur(12px);
-      transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        background 0.25s ease;
-    }
-
-    .premium-feature-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(240,192,64,0.40);
-      background: rgba(240,192,64,0.075);
-    }
-
-    .premium-feature-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 45px;
-      height: 45px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(240,192,64,0.25);
-      border-radius: 12px;
-      background: rgba(240,192,64,0.10);
-      font-size: 22px;
-    }
-
-    .premium-feature-card h3 {
-      margin: 0 0 8px;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .premium-feature-card p {
-      margin: 0;
-      color: #9cacc8;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .premium-bottom-note {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.10);
-      color: #c3cde0;
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    .premium-bottom-note span {
-      color: #f0c040;
-      font-size: 17px;
-    }
-
-/* =========================================
-   ABOUT SHUTTLECONNECT
-========================================= */
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 85px;
-}
-
-#about {
-  scroll-margin-top: 85px;
-}
-
-.about-section {
-  max-width: 1200px;
-  margin: 55px auto;
-  padding: 45px;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
-  gap: 45px;
-  background: linear-gradient(135deg, #091a3b, #07132c);
-  border: 1px solid rgba(240, 192, 64, 0.2);
-  border-radius: 22px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
-}
-
-.about-eyebrow {
-  display: inline-block;
-  color: #f0c040;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 16px;
-}
-
-.about-copy h2 {
-  color: #fff;
-  font-size: clamp(28px, 4vw, 40px);
-  line-height: 1.2;
-  margin: 0 0 20px;
-}
-
-.about-copy h2 span {
-  color: #f0c040;
-}
-
-.about-copy p {
-  color: #aab8d1;
-  font-size: 14px;
-  line-height: 1.9;
-  margin-bottom: 16px;
-}
-
-.about-copy .about-lead {
-  color: #d5deed;
-  font-size: 15px;
-}
-
-.about-link {
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 12px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #dfb63c, #ffc526);
-  color: #071432;
-  border-radius: 9px;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 13px;
-}
-
-.about-benefits {
-  display: grid;
-  gap: 15px;
-}
-
-.about-benefit-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
-  background: rgba(255,255,255,0.055);
-  transition: 0.25s ease;
-}
-
-.about-benefit-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(240,192,64,0.4);
-}
-
-.about-benefit-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: rgba(240,192,64,0.12);
-  font-size: 21px;
-}
-
-.about-benefit-card h3 {
-  color: #fff;
-  font-size: 15px;
-  margin: 0 0 7px;
-}
-
-.about-benefit-card p {
-  color: #9cacc8;
-  font-size: 12px;
-  line-height: 1.7;
-  margin: 0;
-}
-
-@media (max-width: 850px) {
-  .about-section {
-    grid-template-columns: 1fr;
-    margin: 35px 18px;
-    padding: 28px 22px;
-    gap: 28px;
-  }
-}
-
-@media (max-width: 600px) {
-  .about-section {
-    margin: 30px 15px;
-    padding: 23px 17px;
-    border-radius: 16px;
-  }
-
-  .about-copy h2 {
-    font-size: 28px;
-  }
-
-  .about-benefit-card {
-    padding: 16px;
-  }
-}
-
-
-    /* =========================================
-       EXPERIENCE SECTION
-    ========================================= */
-
-    .experience-wrapper {
-      max-width: 1200px;
-      margin: 36px auto;
-      padding: 0 24px;
-    }
-
-    /* =========================================
-       STATS ROW
-    ========================================= */
-
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 36px;
-    }
-
-    .stat-item {
-      background: rgba(6,16,42,0.9);
-      padding: 24px;
-      text-align: center;
-      transition: 0.28s;
-    }
-
-    .stat-item:hover {
-      background: rgba(10,25,65,0.95);
-    }
-
-    .stat-num {
-      font-size: 32px;
-      font-weight: 900;
-      color: #f0c040;
-      letter-spacing: -1px;
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #94a7c8;
-      font-weight: 600;
-    }
-
-    /* =========================================
-       HERO FEATURE PILLS
-    ========================================= */
-
-    .features-strip {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
-
-    .feature-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 7px 16px;
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.75);
-      cursor: default;
-      transition: 0.28s;
-    }
-
-    .feature-pill:hover {
-      background: rgba(240,192,64,0.1);
-      border-color: rgba(240,192,64,0.3);
-      color: #fff;
-    }
-
-    /* =========================================
-       CTA BANNER
-    ========================================= */
-
-    .cta-banner {
-      max-width: 1200px;
-      margin: 0 auto 40px;
-      padding: 0 24px;
-    }
-
-    .cta-inner {
-      background: linear-gradient(135deg, #071432, #0d1f50);
-      border: 1px solid rgba(240,192,64,0.2);
-      border-radius: 20px;
-      padding: 40px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-inner::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -100px;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(
-        circle,
-        rgba(240,192,64,0.08),
-        transparent 70%
-      );
-      pointer-events: none;
-    }
-
-    .cta-text h2 {
-      font-size: 26px;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .cta-text p {
-      font-size: 14px;
-      color: #94a7c8;
-    }
-
-    .cta-text h2 span {
-      color: #f0c040;
-    }
-
-    .cta-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .cta-btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #dfb63c, #ffc526);
-      color: #0d1420;
-      border: none;
-      border-radius: 12px;
-      padding: 14px 28px;
-      font-size: 14px;
-      font-weight: 800;
-      text-decoration: none;
-      cursor: pointer;
-      transition: 0.28s;
-      box-shadow: 0 6px 20px rgba(240,192,64,0.3);
-    }
-
-    .cta-btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(240,192,64,0.5);
-    }
-
-    .cta-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      border-radius: 12px;
-      padding: 14px 28px;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: 0.28s;
-    }
-
-    .cta-btn-secondary:hover {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.35);
-    }
-
-    /* =========================================
-       ANIMATIONS
-    ========================================= */
-
-    .fade-up {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s, transform 0.7s;
-    }
-
-    .fade-up.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* =========================================
-       TABLET
-    ========================================= */
-
-    @media (max-width: 1000px) {
-      .navbar {
-        gap: 14px;
-      }
-
-      .navbar .nav-links {
-        gap: 16px;
-      }
-
-      .navbar .nav-links a {
-        font-size: 12px;
-      }
-
-      .premium-feature-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    /* =========================================
-       MOBILE NAVIGATION
-    ========================================= */
-
-    @media (max-width: 850px) {
-      .navbar {
-        min-height: 66px;
-        flex-wrap: wrap;
-        padding: 10px 5%;
-      }
-
-      .mobile-nav-toggle {
-        display: block;
-        order: 3;
-        margin-left: auto;
-      }
-
-      .navbar .nav-links {
-        display: none;
-        order: 4;
-        flex-basis: 100%;
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 8px 0;
-        border-top: 1px solid rgba(255,255,255,0.10);
-      }
-
-      .navbar.menu-open .nav-links {
-        display: flex;
-      }
-
-      .navbar .nav-links a {
-        display: block;
-        padding: 13px 8px;
-        font-size: 14px;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-      }
-
-      .navbar .nav-actions {
-        order: 2;
-        margin-left: auto;
-      }
-
-      .mobile-nav-toggle {
-        order: 3;
-        margin-left: 0;
-      }
-
-      .navbar .nav-actions .login-link,
-      .navbar .nav-actions .register-btn,
-      .navbar .nav-actions .profile-link {
-        padding: 9px 11px;
-        font-size: 12px;
-      }
-    }
-
-    /* =========================================
-       SMALL MOBILE
-    ========================================= */
-
-    @media (max-width: 600px) {
-      .top-header {
-        padding: 8px 14px;
-      }
-
-      .top-header .brand-label {
-        font-size: 9px;
-      }
-
-      .top-header .header-right {
-        font-size: 9px;
-      }
-
-      .navbar {
-        padding: 10px 14px;
-        gap: 8px;
-      }
-
-      .navbar .logo {
-        font-size: 17px;
-      }
-
-      .navbar .logo-icon {
-        width: 32px;
-        height: 32px;
-      }
-
-      .navbar .nav-actions {
-        gap: 4px;
-      }
-
-      .navbar .nav-actions .login-link {
-        padding: 8px;
-      }
-
-      .navbar .nav-actions .register-btn,
-      .navbar .nav-actions .profile-link {
-        padding: 8px 10px;
-        font-size: 11px;
-      }
-
-      .mobile-nav-toggle {
-        width: 38px;
-        height: 38px;
-      }
-
-      .hero-full {
-        min-height: 430px;
-      }
-
-      .hero-inner {
-        padding: 45px 22px;
-      }
-
-      .hero-inner h1 {
-        font-size: 34px;
-        line-height: 1.2;
-      }
-
-      .hero-description {
-        font-size: 13px;
-      }
-
-      .features-strip {
-        gap: 8px;
-      }
-
-      .feature-pill {
-        font-size: 10px;
-        padding: 7px 10px;
-      }
-
-      .premium-highlights {
-        margin: 35px auto;
-        padding: 0 15px;
-      }
-
-      .premium-panel {
-        padding: 25px 18px;
-        border-radius: 17px;
-      }
-
-      .premium-feature-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-top: 24px;
-      }
-
-      .premium-feature-card {
-        min-height: auto;
-        padding: 18px;
-      }
-
-      .premium-feature-icon {
-        margin-bottom: 12px;
-      }
-
-      .stats-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .stat-item {
-        padding: 18px 10px;
-      }
-
-      .stat-num {
-        font-size: 25px;
-      }
-
-      .cta-inner {
-        padding: 28px 22px;
-      }
-
-      .cta-text h2 {
-        font-size: 22px;
-      }
-
-      .cta-actions {
-        width: 100%;
-      }
-
-      .cta-actions a {
-        flex: 1;
-        text-align: center;
-        padding: 13px 12px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShuttleConnect | Royal Executive Travel</title>
+    <meta name="description" content="ShuttleConnect — Experience comfortable executive shuttle travel with premium seating and convenient digital booking.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+    <style>
+        .hero-full {
+            width: 100%;
+            min-height: 480px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: url('assets/bus_terminus.jpg') center / cover no-repeat;
+            overflow: hidden;
+            border-radius: 0;
+            margin: 0;
+        }
+        .hero-full::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                100deg,
+                rgba(3,10,30,0.90) 0%,
+                rgba(3,10,30,0.65) 45%,
+                rgba(3,10,30,0.35) 100%
+            );
+        }
+        .hero-full::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                0deg,
+                rgba(3,10,30,0.95) 0%,
+                transparent 60%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            width: 100%;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            min-height: 70px;
+            padding: 12px 5%;
+            background: rgba(4, 13, 31, 0.96);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            backdrop-filter: blur(16px);
+        }
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 800;
+        }
+        .navbar .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f0c040, #e8a800);
+            color: #071432;
+            font-weight: 900;
+        }
+        .logo-wordmark {
+            color: #ffffff;
+        }
+        .logo-connect {
+            color: #f0c040;
+        }
+        .navbar .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+        }
+
+        /* NAVBAR HOVER EFFECT — MATCHES LAST-MILE */
+        .navbar .nav-links a {
+            position: relative;
+            display: inline-block;
+            color: #c4cde0;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 10px 0;
+            transition: color 0.25s ease;
+        }
+        .navbar .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2px;
+            height: 2px;
+            background: #f0c040;
+            border-radius: 5px;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.25s ease;
+        }
+        .navbar .nav-links a:hover {
+            color: #f0c040;
+        }
+        .navbar .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+        .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .navbar .login-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 14px;
+            transition: color 0.25s ease;
+        }
+        .navbar .login-link:hover {
+            color: #f0c040;
+        }
+        .navbar .register-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 18px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #dfb63c, #ffc526);
+            color: #071432;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .navbar .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(240,192,64,0.25);
+        }
+        .navbar .profile-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: 1px solid rgba(240,192,64,0.35);
+            border-radius: 9px;
+            color: #f0c040;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.25s ease;
+            max-width: 190px;
+        }
+        .navbar .profile-link:hover {
+            background: rgba(240,192,64,0.10);
+        }
+        .profile-link[hidden],
+        .nav-actions a[hidden] {
+            display: none !important;
+        }
+        .profile-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(240,192,64,0.18);
+            color: #f0c040;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-nav-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            padding: 9px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 9px;
+            background: rgba(255,255,255,0.06);
+            cursor: pointer;
+        }
+        .mobile-nav-toggle span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            margin: 5px 0;
+            border-radius: 3px;
+            background: #ffffff;
+            transition: 0.25s ease;
+        }
+
+        /* PREMIUM TRAVEL HIGHLIGHTS */
+        .premium-highlights {
+            max-width: 1200px;
+            margin: 55px auto;
+            padding: 0 24px;
+        }
+        .premium-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 42px;
+            border: 1px solid rgba(240,192,64,0.20);
+            border-radius: 22px;
+            background:
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(240,192,64,0.12),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    rgba(7,20,50,0.98),
+                    rgba(5,14,35,0.98)
+                );
+            box-shadow: 0 18px 45px rgba(0,0,0,0.20);
+        }
+        .premium-eyebrow {
+            display: inline-block;
+            margin-bottom: 14px;
+            color: #f0c040;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+        .premium-heading {
+            max-width: 650px;
+            margin: 0 0 12px;
+            color: #ffffff;
+            font-size: clamp(26px, 4vw, 38px);
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.8px;
+        }
+        .premium-heading span {
+            color: #f0c040;
+        }
+        .premium-description {
+            max-width: 650px;
+            margin: 0;
+            color: #aab8d1;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .premium-feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .premium-feature-card {
+            min-height: 175px;
+            padding: 22px 18px;
+            border: 1px solid rgba(255,255,255,0.11);
+            border-radius: 15px;
+            background: rgba(255,255,255,0.055);
+            backdrop-filter: blur(12px);
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                background 0.25s ease;
+        }
+        .premium-feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(240,192,64,0.40);
+            background: rgba(240,192,64,0.075);
+        }
+        .premium-feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(240,192,64,0.25);
+            border-radius: 12px;
+            background: rgba(240,192,64,0.10);
+            font-size: 22px;
+        }
+        .premium-feature-card h3 {
+            margin: 0 0 8px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+        .premium-feature-card p {
+            margin: 0;
+            color: #9cacc8;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+        .premium-bottom-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.10);
+            color: #c3cde0;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .premium-bottom-note span {
+            color: #f0c040;
+            font-size: 17px;
+        }
+
+        /* ABOUT SECTION */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px;
+        }
+        #about {
+            scroll-margin-top: 85px;
+        }
+        .about-section {
+            max-width: 1200px;
+            margin: 55px auto;
+            padding: 45px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 45px;
+            background: linear-gradient(135deg, #091a3b, #07132c);
+            border: 1px solid rgba(240, 192, 64, 0.2);
+            border-radius: 22px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
+        }
+        .about-eyebrow {
+            display: inline-block;
+            color: #f0c040;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        .about-copy h2 {
+            color: #fff;
+            font-size: clamp(28px, 4vw, 40px);
+            line-height: 1.2;
+            margin: 0 0 20px;
+        }
+        .about-copy h2 span {
+            color: #f0c040;
+        }
+        .about-copy p {
+            color: #aab8d1;
+            font-size: 14px;
+            line-height: 1.9;
+            margin-bottom: 16px;
+        }
+        .about-copy .about-lead {
+            color: #d5deed;
+            font-size: 15px;
+        }
+        .about-link {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 12px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #dfb63c, #ffc526);
+            color: #071432;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+        }
+        .about-benefits {
+            display: grid;
+            gap: 15px;
+        }
+        .about-benefit-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.055);
+            transition: 0.25s ease;
+        }
+        .about-benefit-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(240,192,64,0.4);
+        }
+        .about-benefit-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(240,192,64,0.12);
+            font-size: 21px;
+        }
+        .about-benefit-card h3 {
+            color: #fff;
+            font-size: 15px;
+            margin: 0 0 7px;
+        }
+        .about-benefit-card p {
+            color: #9cacc8;
+            font-size: 12px;
+            line-height: 1.7;
+            margin: 0;
+        }
+        @media (max-width: 850px) {
+            .about-section {
+                grid-template-columns: 1fr;
+                margin: 35px 18px;
+                padding: 28px 22px;
+                gap: 28px;
+            }
+        }
+        @media (max-width: 600px) {
+            .about-section {
+                margin: 30px 15px;
+                padding: 23px 17px;
+                border-radius: 16px;
+            }
+            .about-copy h2 {
+                font-size: 28px;
+            }
+            .about-benefit-card {
+                padding: 16px;
+            }
+        }
+
+        /* EXPERIENCE SECTION */
+        .experience-wrapper {
+            max-width: 1200px;
+            margin: 36px auto;
+            padding: 0 24px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 36px;
+        }
+        .stat-item {
+            background: rgba(6,16,42,0.9);
+            padding: 24px;
+            text-align: center;
+            transition: 0.28s;
+        }
+        .stat-item:hover {
+            background: rgba(10,25,65,0.95);
+        }
+        .stat-num {
+            font-size: 32px;
+            font-weight: 900;
+            color: #f0c040;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #94a7c8;
+            font-weight: 600;
+        }
+
+        /* HERO FEATURE PILLS */
+        .features-strip {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        .feature-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 7px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+            cursor: default;
+            transition: 0.28s;
+        }
+        .feature-pill:hover {
+            background: rgba(240,192,64,0.1);
+            border-color: rgba(240,192,64,0.3);
+            color: #fff;
+        }
+
+        /* CTA BANNER */
+        .cta-banner {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 0 24px;
+        }
+        .cta-inner {
+            background: linear-gradient(135deg, #071432, #0d1f50);
+            border: 1px solid rgba(240,192,64,0.2);
+            border-radius: 20px;
+            padding: 40px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-inner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(
+                circle,
+                rgba(240,192,64,0.08),
+                transparent 70%
+            );
+            pointer-events: none;
+        }
+        .cta-text h2 {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .cta-text p {
+            font-size: 14px;
+            color: #94a7c8;
+        }
+        .cta-text h2 span {
+            color: #f0c040;
+        }
+        .cta-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .cta-btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #dfb63c, #ffc526);
+            color: #0d1420;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.28s;
+            box-shadow: 0 6px 20px rgba(240,192,64,0.3);
+        }
+        .cta-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(240,192,64,0.5);
+        }
+        .cta-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.28s;
+        }
+        .cta-btn-secondary:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.35);
+        }
+
+        /* ANIMATIONS */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s, transform 0.7s;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* TABLET */
+        @media (max-width: 1000px) {
+            .navbar {
+                gap: 14px;
+            }
+            .navbar .nav-links {
+                gap: 16px;
+            }
+            .navbar .nav-links a {
+                font-size: 12px;
+            }
+            .premium-feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* MOBILE NAVIGATION */
+        @media (max-width: 850px) {
+            .navbar {
+                min-height: 66px;
+                flex-wrap: wrap;
+                padding: 10px 5%;
+            }
+            .mobile-nav-toggle {
+                display: block;
+                order: 3;
+                margin-left: auto;
+            }
+            .navbar .nav-links {
+                display: none;
+                order: 4;
+                flex-basis: 100%;
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 8px 0;
+                border-top: 1px solid rgba(255,255,255,0.10);
+            }
+            .navbar.menu-open .nav-links {
+                display: flex;
+            }
+            .navbar .nav-links a {
+                display: block;
+                padding: 13px 8px;
+                font-size: 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+            }
+            .navbar .nav-links a::after {
+                left: 8px;
+                right: 8px;
+                bottom: 6px;
+            }
+            .navbar .nav-actions {
+                order: 2;
+                margin-left: auto;
+            }
+            .mobile-nav-toggle {
+                order: 3;
+                margin-left: 0;
+            }
+            .navbar .nav-actions .login-link,
+            .navbar .nav-actions .register-btn,
+            .navbar .nav-actions .profile-link {
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+        }
+
+        /* SMALL MOBILE */
+        @media (max-width: 600px) {
+            .top-header {
+                padding: 8px 14px;
+            }
+            .top-header .brand-label {
+                font-size: 9px;
+            }
+            .top-header .header-right {
+                font-size: 9px;
+            }
+            .navbar {
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .navbar .logo {
+                font-size: 17px;
+            }
+            .navbar .logo-icon {
+                width: 32px;
+                height: 32px;
+            }
+            .navbar .nav-actions {
+                gap: 4px;
+            }
+            .navbar .nav-actions .login-link {
+                padding: 8px;
+            }
+            .navbar .nav-actions .register-btn,
+            .navbar .nav-actions .profile-link {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+            .mobile-nav-toggle {
+                width: 38px;
+                height: 38px;
+            }
+            .hero-full {
+                min-height: 430px;
+            }
+            .hero-inner {
+                padding: 45px 22px;
+            }
+            .hero-inner h1 {
+                font-size: 34px;
+                line-height: 1.2;
+            }
+            .hero-description {
+                font-size: 13px;
+            }
+            .features-strip {
+                gap: 8px;
+            }
+            .feature-pill {
+                font-size: 10px;
+                padding: 7px 10px;
+            }
+            .premium-highlights {
+                margin: 35px auto;
+                padding: 0 15px;
+            }
+            .premium-panel {
+                padding: 25px 18px;
+                border-radius: 17px;
+            }
+            .premium-feature-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-top: 24px;
+            }
+            .premium-feature-card {
+                min-height: auto;
+                padding: 18px;
+            }
+            .premium-feature-icon {
+                margin-bottom: 12px;
+            }
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-item {
+                padding: 18px 10px;
+            }
+            .stat-num {
+                font-size: 25px;
+            }
+            .cta-inner {
+                padding: 28px 22px;
+            }
+            .cta-text h2 {
+                font-size: 22px;
+            }
+            .cta-actions {
+                width: 100%;
+            }
+            .cta-actions a {
+                flex: 1;
+                text-align: center;
+                padding: 13px 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- TOP HEADER -->
+    <header class="top-header">
+        <div class="brand-label">
+            <span class="brand-dot"></span>
+            ROYAL EXECUTIVE COMMUTES • 100% ELECTRIC
+        </div>
+        <div class="header-right">
+            <span>Public Prestige Portal</span>
+            <span class="header-status">● Online</span>
+        </div>
+    </header>
 
-  <!-- TOP HEADER -->
-  <header class="top-header">
-    <div class="brand-label">
-      <span class="brand-dot"></span>
-      ROYAL EXECUTIVE COMMUTES • 100% ELECTRIC
+    <!-- MAIN NAVIGATION -->
+    <nav class="navbar" aria-label="Main navigation">
+        <a href="index.html" class="logo" aria-label="Shuttle Connect home">
+            <span class="logo-icon">S</span>
+            <span class="logo-wordmark">
+                Shuttle <span class="logo-connect">Connect</span>
+            </span>
+        </a>
+
+        <button
+            class="mobile-nav-toggle"
+            id="mobileNavToggle"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="primaryNavLinks"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="nav-links" id="primaryNavLinks">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#about">About Us</a>
+            <a href="last-mile.html">Last-Mile</a>
+            <a href="booking.html">Bookings</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="login.html" class="login-link" id="loginNavLink">
+                Login
+            </a>
+            <a href="register.html" class="register-btn" id="registerNavLink">
+                Register
+            </a>
+            <a
+                href="passenger-dashboard.html"
+                class="profile-link"
+                id="profileNavLink"
+                hidden
+            >
+                <span class="profile-avatar" id="profileAvatar">P</span>
+                <span id="profileNavName">My Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-full" id="home" aria-label="Hero section">
+        <div class="hero-inner">
+            <div class="hero-badge">
+                <span class="online-dot"></span>
+                ROYAL EXECUTIVE COMMUTES • 100% ELECTRIC
+            </div>
+            <h1>
+                Your First-Class Journey,<br>
+                Just a <span class="gold-text">Seat Away.</span>
+            </h1>
+            <p class="hero-description">
+                Reserve your guaranteed luxury leather recliner aboard whisper-quiet
+                electric coaches connecting premier tech corridors and prestige transit lounges.
+            </p>
+            <div class="features-strip">
+                <div class="feature-pill">⚡ 100% Electric Fleet</div>
+                <div class="feature-pill">🛋️ Leather Recliners</div>
+                <div class="feature-pill">📶 High-Speed Wi-Fi</div>
+                <div class="feature-pill">❄️ Climate Control</div>
+                <div class="feature-pill">🏆 Priority Boarding</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PREMIUM TRAVEL HIGHLIGHTS -->
+    <!-- Homepage search panel has been removed completely. -->
+    <section class="premium-highlights fade-up" id="highlights">
+        <div class="premium-panel">
+            <span class="premium-eyebrow">
+                THE SHUTTLECONNECT EXPERIENCE
+            </span>
+            <h2 class="premium-heading">
+                Travel Beyond the <span>Ordinary.</span>
+            </h2>
+            <p class="premium-description">
+                Every journey should feel comfortable, convenient and effortless.
+                Discover the features that make your ShuttleConnect experience
+                different from an ordinary commute.
+            </p>
+            <div class="premium-feature-grid">
+                <article class="premium-feature-card">
+                    <div class="premium-feature-icon" aria-hidden="true">🛋️</div>
+                    <h3>Premium Seating</h3>
+                    <p>
+                        Enjoy comfortable executive-style leather recliner seating
+                        designed for a relaxed journey.
+                    </p>
+                </article>
+                <article class="premium-feature-card">
+                    <div class="premium-feature-icon" aria-hidden="true">⚡</div>
+                    <h3>Electric Fleet</h3>
+                    <p>
+                        Experience a quieter and more environmentally conscious
+                        commuting experience.
+                    </p>
+                </article>
+                <article class="premium-feature-card">
+                    <div class="premium-feature-icon" aria-hidden="true">📶</div>
+                    <h3>Onboard Connectivity</h3>
+                    <p>
+                        Stay connected while travelling with the onboard connectivity
+                        experience.
+                    </p>
+                </article>
+                <article class="premium-feature-card">
+                    <div class="premium-feature-icon" aria-hidden="true">🎫</div>
+                    <h3>Digital Boarding Pass</h3>
+                    <p>
+                        Access your digital ticket and booking details conveniently
+                        through your passenger account.
+                    </p>
+                </article>
+            </div>
+            <div class="premium-bottom-note">
+                <span aria-hidden="true">✦</span>
+                <span>
+                    Your journey, your comfort — experience a smarter way to travel
+                    with ShuttleConnect.
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS ROW -->
+    <div class="experience-wrapper fade-up" id="stats">
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="stat-num">12K+</div>
+                <div class="stat-label">Daily Commuters</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">48</div>
+                <div class="stat-label">Premium Routes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">99.4%</div>
+                <div class="stat-label">On-Time Arrival</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">4.9★</div>
+                <div class="stat-label">Passenger Rating</div>
+            </div>
+        </div>
     </div>
 
-    <div class="header-right">
-      <span>Public Prestige Portal</span>
-      <span class="header-status">● Online</span>
-    </div>
-  </header>
-
-  <!-- MAIN NAVIGATION -->
-  <nav class="navbar" aria-label="Main navigation">
-
-    <a href="index.html" class="logo" aria-label="ShuttleConnect home">
-      <span class="logo-icon">S</span>
-      <span class="logo-wordmark">
-        Shuttle<span class="logo-connect">Connect</span>
-      </span>
-    </a>
-
-    <!-- Mobile hamburger: hidden on desktop -->
-    <button
-      class="mobile-nav-toggle"
-      id="mobileNavToggle"
-      type="button"
-      aria-label="Open navigation menu"
-      aria-expanded="false"
-      aria-controls="primaryNavLinks"
+    <!-- ABOUT SHUTTLECONNECT -->
+    <section
+        class="about-section fade-up"
+        id="about"
+        aria-labelledby="aboutHeading"
     >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <div class="nav-links" id="primaryNavLinks">
-      <a href="index.html#home" class="active">Home</a>
-      <a href="index.html#about">About Us</a>
-      <a href="last-mile.html">Last-Mile</a>
-      <a href="booking.html">Bookings</a>
-    </div>
-
-    <div class="nav-actions">
-      <a href="login.html" class="login-link" id="loginNavLink">
-        Login
-      </a>
-
-      <a href="register.html" class="register-btn" id="registerNavLink">
-        Register
-      </a>
-
-      <a
-        href="passenger-dashboard.html"
-        class="profile-link"
-        id="profileNavLink"
-        hidden
-      >
-        <span class="profile-avatar" id="profileAvatar">P</span>
-        <span id="profileNavName">My Profile</span>
-      </a>
-    </div>
-
-  </nav>
-
-  <!-- HERO SECTION -->
-  <section class="hero-full" id="home" aria-label="Hero section">
-
-    <div class="hero-inner">
-
-      <div class="hero-badge">
-        <span class="online-dot"></span>
-        ROYAL EXECUTIVE COMMUTES • 100% ELECTRIC
-      </div>
-
-      <h1>
-        Your First-Class Journey,<br>
-        Just a <span class="gold-text">Seat Away.</span>
-      </h1>
-
-      <p class="hero-description">
-        Reserve your guaranteed luxury leather recliner aboard whisper-quiet
-        electric coaches connecting premier tech corridors and prestige transit lounges.
-      </p>
-
-      <div class="features-strip">
-        <div class="feature-pill">⚡ 100% Electric Fleet</div>
-        <div class="feature-pill">🛋️ Leather Recliners</div>
-        <div class="feature-pill">📶 High-Speed Wi-Fi</div>
-        <div class="feature-pill">❄️ Climate Control</div>
-        <div class="feature-pill">🏆 Priority Boarding</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PREMIUM TRAVEL HIGHLIGHTS -->
-  <!-- Homepage search panel has been removed completely. -->
-
-  <section class="premium-highlights fade-up" id="highlights">
-
-    <div class="premium-panel">
-
-      <span class="premium-eyebrow">
-        THE SHUTTLECONNECT EXPERIENCE
-      </span>
-
-      <h2 class="premium-heading">
-        Travel Beyond the <span>Ordinary.</span>
-      </h2>
-
-      <p class="premium-description">
-        Every journey should feel comfortable, convenient and effortless.
-        Discover the features that make your ShuttleConnect experience
-        different from an ordinary commute.
-      </p>
-
-      <div class="premium-feature-grid">
-
-        <article class="premium-feature-card">
-          <div class="premium-feature-icon" aria-hidden="true">
-            🛋️
-          </div>
-          <h3>Premium Seating</h3>
-          <p>
-            Enjoy comfortable executive-style leather recliner seating
-            designed for a relaxed journey.
-          </p>
-        </article>
-
-        <article class="premium-feature-card">
-          <div class="premium-feature-icon" aria-hidden="true">
-            ⚡
-          </div>
-          <h3>Electric Fleet</h3>
-          <p>
-            Experience a quieter and more environmentally conscious
-            commuting experience.
-          </p>
-        </article>
-
-        <article class="premium-feature-card">
-          <div class="premium-feature-icon" aria-hidden="true">
-            📶
-          </div>
-          <h3>Onboard Connectivity</h3>
-          <p>
-            Stay connected while travelling with the onboard connectivity
-            experience.
-          </p>
-        </article>
-
-        <article class="premium-feature-card">
-          <div class="premium-feature-icon" aria-hidden="true">
-            🎫
-          </div>
-          <h3>Digital Boarding Pass</h3>
-          <p>
-            Access your digital ticket and booking details conveniently
-            through your passenger account.
-          </p>
-        </article>
-
-      </div>
-
-      <div class="premium-bottom-note">
-        <span aria-hidden="true">✦</span>
-        <span>
-          Your journey, your comfort — experience a smarter way to travel
-          with ShuttleConnect.
-        </span>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- STATS ROW -->
-  <div class="experience-wrapper fade-up" id="stats">
-
-    <div class="stats-row">
-
-      <div class="stat-item">
-        <div class="stat-num">12K+</div>
-        <div class="stat-label">Daily Commuters</div>
-      </div>
-
-      <div class="stat-item">
-        <div class="stat-num">48</div>
-        <div class="stat-label">Premium Routes</div>
-      </div>
-
-      <div class="stat-item">
-        <div class="stat-num">99.4%</div>
-        <div class="stat-label">On-Time Arrival</div>
-      </div>
-
-      <div class="stat-item">
-        <div class="stat-num">4.9★</div>
-        <div class="stat-label">Passenger Rating</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ABOUT SHUTTLECONNECT -->
-  <section
-    class="about-section fade-up"
-    id="about"
-    aria-labelledby="aboutHeading"
-  >
-
-    <div class="about-copy">
-
-      <span class="about-eyebrow">ABOUT SHUTTLECONNECT</span>
-
-      <h2 id="aboutHeading">
-        One platform.
-        <span>Better-connected journeys.</span>
-      </h2>
-
-      <p class="about-lead">
-        Getting from one place to another can involve more than one ride.
-        ShuttleConnect is designed to bring the different parts of a journey
-        together in one convenient travel experience.
-      </p>
-
-      <p>
-        From everyday city travel to intercity bus journeys and the transport
-        needed for the final leg, our goal is to make planning and managing
-        travel simpler for passengers.
-      </p>
-
-      <a href="booking.html" class="about-link">
-        Plan your journey <span aria-hidden="true">→</span>
-      </a>
-
-    </div>
-
-    <div class="about-benefits">
-
-      <article class="about-benefit-card">
-        <span class="about-benefit-icon" aria-hidden="true">🚌</span>
-        <div>
-          <h3>City connections</h3>
-          <p>
-            Explore local shuttle travel between important destinations.
-          </p>
+        <div class="about-copy">
+            <span class="about-eyebrow">ABOUT SHUTTLECONNECT</span>
+            <h2 id="aboutHeading">
+                One platform.
+                <span>Better-connected journeys.</span>
+            </h2>
+            <p class="about-lead">
+                Getting from one place to another can involve more than one ride.
+                ShuttleConnect is designed to bring the different parts of a journey
+                together in one convenient travel experience.
+            </p>
+            <p>
+                From everyday city travel to intercity bus journeys and the transport
+                needed for the final leg, our goal is to make planning and managing
+                travel simpler for passengers.
+            </p>
+            <a href="booking.html" class="about-link">
+                Plan your journey <span aria-hidden="true">→</span>
+            </a>
         </div>
-      </article>
-
-      <article class="about-benefit-card">
-        <span class="about-benefit-icon" aria-hidden="true">🚍</span>
-        <div>
-          <h3>Intercity journeys</h3>
-          <p>
-            Plan travel between cities with suitable bus and seating choices.
-          </p>
+        <div class="about-benefits">
+            <article class="about-benefit-card">
+                <span class="about-benefit-icon" aria-hidden="true">🚌</span>
+                <div>
+                    <h3>City connections</h3>
+                    <p>
+                        Explore local shuttle travel between important destinations.
+                    </p>
+                </div>
+            </article>
+            <article class="about-benefit-card">
+                <span class="about-benefit-icon" aria-hidden="true">🚍</span>
+                <div>
+                    <h3>Intercity journeys</h3>
+                    <p>
+                        Plan travel between cities with suitable bus and seating choices.
+                    </p>
+                </div>
+            </article>
+            <article class="about-benefit-card">
+                <span class="about-benefit-icon" aria-hidden="true">🚕</span>
+                <div>
+                    <h3>Last-mile options</h3>
+                    <p>
+                        Bring the first and final parts of a journey into the travel plan.
+                    </p>
+                </div>
+            </article>
         </div>
-      </article>
+    </section>
 
-      <article class="about-benefit-card">
-        <span class="about-benefit-icon" aria-hidden="true">🚕</span>
-        <div>
-          <h3>Last-mile options</h3>
-          <p>
-            Bring the first and final parts of a journey into the travel plan.
-          </p>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- ROYAL COMMUTE EXPERIENCE -->
-  <section
-    class="experience-wrapper fade-up"
-    id="services"
-    aria-label="Services and experience section"
-  >
-
-    <h2 class="section-heading">
-      THE ROYAL COMMUTE EXPERIENCE
-    </h2>
-
-    <div class="experience-grid">
-
-      <article
-        class="experience-card comfort-card"
-        role="img"
-        aria-label="Quiet Cabins and Ambient Lighting"
-      >
-        <div class="card-overlay">
-          <span class="card-label">FIRST-CLASS CABIN</span>
-          <h3>Quilted Leather &amp; Ambient Lighting</h3>
-          <p>Fast Wi-Fi, personal desks &amp; whisper acoustics</p>
-        </div>
-      </article>
-
-      <article
-        class="experience-card lounge-card"
-        role="img"
-        aria-label="Prestige Transit Lounges"
-      >
-        <div class="card-overlay">
-          <span class="card-label">PRESTIGE TRANSIT LOUNGES</span>
-          <h3>Priority Boarding Terminals</h3>
-          <p>Dedicated express bays with frictionless access</p>
-        </div>
-      </article>
-
-    </div>
-
-    <!-- BOOKING STEPS -->
-    <div class="steps-grid">
-
-      <div class="step-card">
-        <div class="step-number">I</div>
-        <h3>Search &amp; Select</h3>
-        <p>
-          Discover premium daily departures on your preferred route.
-        </p>
-      </div>
-
-      <div class="step-card">
-        <div class="step-number">II</div>
-        <h3>Select Leather Recliner</h3>
-        <p>
-          Choose your preferred seat in our 3D bus environment.
-        </p>
-      </div>
-
-      <div class="step-card">
-        <div class="step-number">III</div>
-        <h3>Instant Royal Pass</h3>
-        <p>
-          Confirm your reservation and receive your digital pass.
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- CTA BANNER -->
-  <div class="cta-banner fade-up">
-
-    <div class="cta-inner">
-
-      <div class="cta-text">
-        <h2>
-          Ready for Your <span>Royal Journey?</span>
+    <!-- ROYAL COMMUTE EXPERIENCE -->
+    <section
+        class="experience-wrapper fade-up"
+        id="services"
+        aria-label="Services and experience section"
+    >
+        <h2 class="section-heading">
+            THE ROYAL COMMUTE EXPERIENCE
         </h2>
+        <div class="experience-grid">
+            <article
+                class="experience-card comfort-card"
+                role="img"
+                aria-label="Quiet Cabins and Ambient Lighting"
+            >
+                <div class="card-overlay">
+                    <span class="card-label">FIRST-CLASS CABIN</span>
+                    <h3>Quilted Leather &amp; Ambient Lighting</h3>
+                    <p>Fast Wi-Fi, personal desks &amp; whisper acoustics</p>
+                </div>
+            </article>
+            <article
+                class="experience-card lounge-card"
+                role="img"
+                aria-label="Prestige Transit Lounges"
+            >
+                <div class="card-overlay">
+                    <span class="card-label">PRESTIGE TRANSIT LOUNGES</span>
+                    <h3>Priority Boarding Terminals</h3>
+                    <p>Dedicated express bays with frictionless access</p>
+                </div>
+            </article>
+        </div>
 
+        <!-- BOOKING STEPS -->
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">I</div>
+                <h3>Search &amp; Select</h3>
+                <p>
+                    Discover premium daily departures on your preferred route.
+                </p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">II</div>
+                <h3>Select Leather Recliner</h3>
+                <p>
+                    Choose your preferred seat in our 3D bus environment.
+                </p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">III</div>
+                <h3>Instant Royal Pass</h3>
+                <p>
+                    Confirm your reservation and receive your digital pass.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER -->
+    <div class="cta-banner fade-up">
+        <div class="cta-inner">
+            <div class="cta-text">
+                <h2>
+                    Ready for Your <span>Royal Journey?</span>
+                </h2>
+                <p>
+                    Join 12,000+ executives commuting in first-class comfort every day.
+                </p>
+            </div>
+            <div class="cta-actions">
+                <a href="booking.html" class="cta-btn-primary">
+                    🎫 Book Your Seat Now
+                </a>
+                <a href="register.html" class="cta-btn-secondary">
+                    Register Free
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
         <p>
-          Join 12,000+ executives commuting in first-class comfort every day.
+            © 2026 ShuttleConnect. Royal journeys, made simple.
         </p>
-      </div>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Corporate</a>
+        </div>
+    </footer>
 
-      <div class="cta-actions">
+    <!-- PAGE SCRIPTS -->
+    <script>
+        /* RESPONSIVE NAVIGATION */
+        const navbar = document.querySelector('.navbar');
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const primaryNavLinks = document.getElementById('primaryNavLinks');
 
-        <a href="booking.html" class="cta-btn-primary">
-          🎫 Book Your Seat Now
-        </a>
+        function closeMobileMenu() {
+            navbar.classList.remove('menu-open');
+            mobileNavToggle.setAttribute('aria-expanded', 'false');
+            mobileNavToggle.setAttribute(
+                'aria-label',
+                'Open navigation menu'
+            );
+        }
 
-        <a href="register.html" class="cta-btn-secondary">
-          Register Free
-        </a>
+        mobileNavToggle.addEventListener('click', () => {
+            const isOpen = navbar.classList.toggle('menu-open');
 
-      </div>
+            mobileNavToggle.setAttribute(
+                'aria-expanded',
+                String(isOpen)
+            );
 
-    </div>
-  </div>
+            mobileNavToggle.setAttribute(
+                'aria-label',
+                isOpen ? 'Close navigation menu' : 'Open navigation menu'
+            );
+        });
 
-  <!-- FOOTER -->
-  <footer class="footer">
+        primaryNavLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
 
-    <p>
-      © 2026 ShuttleConnect. Royal journeys, made simple.
-    </p>
-
-    <div class="footer-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Contact Us</a>
-      <a href="#">Corporate</a>
-    </div>
-
-  </footer>
-
-  <!-- PAGE SCRIPTS -->
-  <script>
-    /* =========================================
-       RESPONSIVE NAVIGATION
-    ========================================= */
-
-    const navbar = document.querySelector('.navbar');
-    const mobileNavToggle = document.getElementById('mobileNavToggle');
-    const primaryNavLinks = document.getElementById('primaryNavLinks');
-
-    function closeMobileMenu() {
-      navbar.classList.remove('menu-open');
-      mobileNavToggle.setAttribute('aria-expanded', 'false');
-      mobileNavToggle.setAttribute(
-        'aria-label',
-        'Open navigation menu'
-      );
-    }
-
-    mobileNavToggle.addEventListener('click', () => {
-      const isOpen = navbar.classList.toggle('menu-open');
-
-      mobileNavToggle.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-      );
-
-      mobileNavToggle.setAttribute(
-        'aria-label',
-        isOpen ? 'Close navigation menu' : 'Open navigation menu'
-      );
-    });
-
-    primaryNavLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', closeMobileMenu);
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!navbar.contains(event.target)) {
-        closeMobileMenu();
-      }
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        closeMobileMenu();
-      }
-    });
-
-
-    /* =========================================
-       PASSENGER PROFILE NAVIGATION
-    ========================================= */
-
-    async function loadPassengerNavbar() {
-      const token = localStorage.getItem('token');
-
-      const loginLink = document.getElementById('loginNavLink');
-      const registerLink = document.getElementById('registerNavLink');
-      const profileLink = document.getElementById('profileNavLink');
-      const profileNameElement = document.getElementById('profileNavName');
-      const profileAvatar = document.getElementById('profileAvatar');
-
-      // If no passenger token exists, keep Login and Register visible.
-      if (!token) {
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          'http://localhost:3000/api/passenger/profile',
-          {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`
+        document.addEventListener('click', (event) => {
+            if (!navbar.contains(event.target)) {
+                closeMobileMenu();
             }
-          }
-        );
+        });
 
-        if (!response.ok) {
-          return;
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        /* PASSENGER PROFILE NAVIGATION */
+        async function loadPassengerNavbar() {
+            const token = localStorage.getItem('token');
+
+            const loginLink = document.getElementById('loginNavLink');
+            const registerLink = document.getElementById('registerNavLink');
+            const profileLink = document.getElementById('profileNavLink');
+            const profileNameElement = document.getElementById('profileNavName');
+            const profileAvatar = document.getElementById('profileAvatar');
+
+            if (!token) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    'http://localhost:3000/api/passenger/profile',
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const result = await response.json();
+
+                const passenger =
+                    result.user ||
+                    result.profile ||
+                    result.data ||
+                    result;
+
+                const passengerName =
+                    passenger.full_name ||
+                    passenger.name ||
+                    passenger.fullName;
+
+                if (!passengerName) {
+                    return;
+                }
+
+                profileNameElement.textContent = passengerName;
+                profileAvatar.textContent =
+                    passengerName.trim().charAt(0).toUpperCase();
+
+                loginLink.hidden = true;
+                registerLink.hidden = true;
+                profileLink.hidden = false;
+
+            } catch (error) {
+                console.error(
+                    'Unable to load passenger profile in navbar:',
+                    error
+                );
+            }
         }
 
-        const result = await response.json();
+        loadPassengerNavbar();
 
-        // Support the response structure used by the passenger profile API.
-        const passenger =
-          result.user ||
-          result.profile ||
-          result.data ||
-          result;
+        /* SCROLL FADE-IN ANIMATION */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
 
-        const passengerName =
-          passenger.full_name ||
-          passenger.name ||
-          passenger.fullName;
-
-        if (!passengerName) {
-          return;
-        }
-
-        // Show the actual passenger name in the navbar.
-        profileNameElement.textContent = passengerName;
-        profileAvatar.textContent =
-          passengerName.trim().charAt(0).toUpperCase();
-
-        // Replace Login and Register with the passenger profile link.
-        loginLink.hidden = true;
-        registerLink.hidden = true;
-        profileLink.hidden = false;
-
-      } catch (error) {
-        console.error(
-          'Unable to load passenger profile in navbar:',
-          error
-        );
-      }
-    }
-
-    loadPassengerNavbar();
-
-
-    /* =========================================
-       SCROLL FADE-IN ANIMATION
-    ========================================= */
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
-
-    document.querySelectorAll('.fade-up').forEach(element => {
-      observer.observe(element);
-    });
-
-  </script>
-
+        document.querySelectorAll('.fade-up').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
 </body>
 </html>

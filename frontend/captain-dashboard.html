@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7041A6">
+
+    <title>Captain Portal | ShuttleConnect</title>
+
+    <link rel="stylesheet" href="css/captain-dashboard.css">
+</head>
+
+<body>
+
+    <main class="captain-auth-page">
+
+        <!-- BRANDING SECTION -->
+        <section class="auth-brand-panel">
+
+            <div class="brand-logo">
+                <div class="brand-icon">S</div>
+                <span>ShuttleConnect</span>
+            </div>
+
+            <div class="brand-content">
+
+                <span class="brand-tagline">CAPTAIN NETWORK</span>
+
+                <h1>
+                    Your journey.<br>
+                    Your earnings.<br>
+                    Your freedom.
+                </h1>
+
+                <p>
+                    Welcome to the ShuttleConnect Captain Network.
+                    Manage your rides, track your earnings and
+                    grow with a connected mobility network.
+                </p>
+
+            </div>
+
+            <div class="brand-footer">
+                © 2026 ShuttleConnect. All rights reserved.
+            </div>
+
+        </section>
+
+
+        <!-- LOGIN SECTION -->
+        <section class="auth-form-panel">
+
+            <div class="login-container">
+
+                <div class="login-heading">
+
+                    <span class="welcome-label">CAPTAIN PORTAL</span>
+
+                    <h2>Welcome back!</h2>
+
+                    <p>
+                        Sign in to access your captain dashboard.
+                    </p>
+
+                </div>
+
+
+                <!-- LOGIN FORM -->
+                <form id="captainLoginForm">
+
+                    <div class="form-group">
+
+                        <label for="captainEmail">
+                            Email address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="captainEmail"
+                            name="email"
+                            placeholder="Enter your registered email"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="captainPassword">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="captainPassword"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- REMEMBER ME AND FORGOT PASSWORD -->
+                    <div class="login-options">
+
+                        <label class="remember-me" for="rememberMe">
+
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                name="rememberMe"
+                            >
+
+                            <span>Remember me</span>
+
+                        </label>
+
+                        <a href="#" id="forgotPasswordLink">
+                            Forgot password?
+                        </a>
+
+                    </div>
+
+
+                    <p
+                        id="loginMessage"
+                        class="login-message"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+
+                    <button type="submit" id="loginButton">
+                        Sign In
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <!-- CAPTAIN APPLICATION -->
+                <div class="signup-section">
+
+                    <p>New to the Captain Network?</p>
+
+                    <a href="captain-signup.html" class="signup-link">
+                        Apply as a Captain
+                        <span>→</span>
+                    </a>
+
+                    <small>
+                        Applications are subject to verification
+                        and admin approval.
+                    </small>
+
+                </div>
+
+
+                <!-- SECURITY INFORMATION -->
+                <div class="security-note">
+
+                    <span>🔒</span>
+
+                    <p>
+                        Secure access exclusively for registered
+                        ShuttleConnect captains.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="js/captain-dashboard.js"></script>
+
+</body>
+</html>

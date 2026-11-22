@@ -2,7 +2,8 @@
 "use strict";
 
 // ======================================================
-// SHUTTLECONNECT - 2D SHUTTLE BOOKING SYSTEM
+// SHUTTLECONNECT - DYNAMIC VEHICLE BOOKING SYSTEM
+// Supports Seater, Sleeper and Mixed vehicles
 // ======================================================
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -53,6 +54,9 @@ const confirmedSeatCount = document.getElementById("confirmedSeatCount");
 const confirmedAmount = document.getElementById("confirmedAmount");
 
 const toast = document.getElementById("toast");
+
+const busContainer = document.querySelector(".bus-container");
+const columnLabels = document.querySelector(".seat-column-labels");
 
 // ======================================================
 // HELPER FUNCTIONS
@@ -133,6 +137,80 @@ function escapeHTML(value) {
 
         return entities[character];
     });
+}
+
+// ======================================================
+// VEHICLE TYPE DETECTION
+// ======================================================
+
+function getVehicleType(trip) {
+    const model = String(trip?.vehicle_model || "")
+        .toLowerCase()
+        .trim();
+
+    if (model.includes("mixed")) {
+        return "mixed";
+    }
+
+    if (model.includes("sleeper")) {
+        return "sleeper";
+    }
+
+    if (model.includes("seater")) {
+        return "seater";
+    }
+
+    // Capacity-based fallback for clearly identifiable models.
+    const capacity = Number(trip?.seating_capacity);
+
+    if (capacity === 24) {
+        return "sleeper";
+    }
+
+    if (capacity === 20) {
+        return "seater";
+    }
+
+    if (capacity === 40) {
+        return "mixed";
+    }
+
+    return "unknown";
+}
+
+// ======================================================
+// DISPLAY LABEL MAPPING
+// Backend IDs remain numeric and unchanged.
+// ======================================================
+
+function getSeatDisplayLabel(seatNumber, vehicleType) {
+    const id = Number(seatNumber);
+
+    if (vehicleType === "sleeper") {
+        if (id >= 1 && id <= 12) {
+            return `L${id}`;
+        }
+
+        if (id >= 13 && id <= 24) {
+            return `U${id - 12}`;
+        }
+    }
+
+    if (vehicleType === "mixed") {
+        if (id >= 1 && id <= 20) {
+            return `S${id}`;
+        }
+
+        if (id >= 21 && id <= 30) {
+            return `L${id - 20}`;
+        }
+
+        if (id >= 31 && id <= 40) {
+            return `U${id - 30}`;
+        }
+    }
+
+    return `S${id}`;
 }
 
 // ======================================================
@@ -287,7 +365,7 @@ searchForm.addEventListener("submit", async function (event) {
 
         setSearchMessage(
             trips.length
-                ? `${trips.length} trip(s) found. Select a trip to view its seats.`
+                ? `${trips.length} trip(s) found. Select a trip to view its layout.`
                 : "No scheduled trips found for this route and date.",
             trips.length ? "success" : ""
         );
@@ -339,6 +417,7 @@ function renderTrips(trips) {
         const fare = Number(
             trip.fare_per_seat ?? trip.fare ?? 0
         );
+
         const availableSeats = Number(trip.available_seats);
 
         const card = document.createElement("article");
@@ -356,6 +435,8 @@ function renderTrips(trips) {
 
         const routeName = trip.route_name ||
             `${trip.origin || originInput.value} → ${trip.destination || destinationInput.value}`;
+
+        const vehicleModel = trip.vehicle_model || "Vehicle type unavailable";
 
         card.innerHTML = `
             <div class="trip-detail">
@@ -377,12 +458,19 @@ function renderTrips(trips) {
                 <div class="trip-fare">
                     ${formatCurrency(fare)}
                 </div>
-                <small class="muted-text">Per seat</small>
+                <small class="muted-text">Per seat / berth</small>
             </div>
 
             <div class="trip-detail">
-                <span>Available seats</span>
-                <strong>${Number.isFinite(availableSeats) ? escapeHTML(availableSeats) : "Not specified"}</strong>
+                <span>Vehicle</span>
+                <strong>${escapeHTML(vehicleModel)}</strong>
+            </div>
+
+            <div class="trip-detail">
+                <span>Available</span>
+                <strong>${Number.isFinite(availableSeats)
+                    ? escapeHTML(availableSeats)
+                    : "Not specified"}</strong>
             </div>
 
             <button type="button" class="select-trip-button">
@@ -426,9 +514,11 @@ async function selectTrip(trip, selectedCard) {
     document.querySelectorAll(".trip-card").forEach(card => {
         card.classList.remove("selected");
 
-        card.querySelector(
-            ".select-trip-button"
-        ).textContent = "Select Trip";
+        const button = card.querySelector(".select-trip-button");
+
+        if (button) {
+            button.textContent = "Select Trip";
+        }
     });
 
     selectedCard.classList.add("selected");
@@ -437,11 +527,13 @@ async function selectTrip(trip, selectedCard) {
         ".select-trip-button"
     ).textContent = "Selected";
 
-    seatStatus.textContent = "Loading seats";
+    bookingResult.hidden = true;
+
+    seatStatus.textContent = "Loading layout";
 
     seatLayout.innerHTML = `
         <div class="seat-placeholder">
-            Loading seat availability...
+            Loading vehicle layout and availability...
         </div>
     `;
 
@@ -470,7 +562,8 @@ async function selectTrip(trip, selectedCard) {
 
         renderSeatLayout();
 
-        seatStatus.textContent = "Trip selected";
+        seatStatus.textContent =
+            `${getVehicleType(selectedTrip).toUpperCase()} layout`;
 
         document.querySelector(".seats-panel").scrollIntoView({
             behavior: "smooth",
@@ -491,11 +584,23 @@ async function selectTrip(trip, selectedCard) {
 }
 
 // ======================================================
-// RENDER REDBUS-STYLE 20-SEAT LAYOUT
+// VEHICLE LAYOUT RENDERER
 // ======================================================
 
 function renderSeatLayout() {
     seatLayout.innerHTML = "";
+
+    if (columnLabels) {
+        columnLabels.hidden = true;
+    }
+
+    if (busContainer) {
+        busContainer.classList.remove(
+            "seater-vehicle",
+            "sleeper-vehicle",
+            "mixed-vehicle"
+        );
+    }
 
     if (!Array.isArray(seatData) || seatData.length === 0) {
         seatLayout.innerHTML = `
@@ -506,45 +611,74 @@ function renderSeatLayout() {
         return;
     }
 
+    const vehicleType = getVehicleType(selectedTrip);
+
+    if (vehicleType === "unknown") {
+        seatLayout.innerHTML = `
+            <div class="seat-placeholder">
+                <h3>Vehicle layout unavailable</h3>
+                <p>
+                    The vehicle model is not recognised.
+                    Please check the vehicle configuration with the administrator.
+                </p>
+            </div>
+        `;
+        return;
+    }
+
     const sortedSeats = [...seatData].sort(
         (a, b) => Number(a.seat_number) - Number(b.seat_number)
     );
 
-    for (let index = 0; index < sortedSeats.length; index += 4) {
-        const rowSeats = sortedSeats.slice(index, index + 4);
+    if (busContainer) {
+        busContainer.classList.add(`${vehicleType}-vehicle`);
+    }
 
-        const row = document.createElement("div");
-        row.className = "seat-row";
-
-        // Two seats on the left
-        addSeatToRow(row, rowSeats[0]);
-        addSeatToRow(row, rowSeats[1]);
-
-        // Central aisle
-        const aisle = document.createElement("div");
-        aisle.className = "seat-aisle";
-
-        row.appendChild(aisle);
-
-        // Two seats on the right
-        addSeatToRow(row, rowSeats[2]);
-        addSeatToRow(row, rowSeats[3]);
-
-        seatLayout.appendChild(row);
+    if (vehicleType === "seater") {
+        renderSeaterLayout(sortedSeats);
+    } else if (vehicleType === "sleeper") {
+        renderSleeperLayout(sortedSeats);
+    } else if (vehicleType === "mixed") {
+        renderMixedLayout(sortedSeats);
     }
 }
 
 // ======================================================
-// CREATE INDIVIDUAL SEAT ICON
+// CREATE LAYOUT SECTION
 // ======================================================
 
-function addSeatToRow(row, seat) {
-    if (!seat) {
-        const empty = document.createElement("span");
-        row.appendChild(empty);
-        return;
+function createLayoutSection(title, subtitle = "") {
+    const section = document.createElement("section");
+
+    section.className = "vehicle-section";
+
+    const heading = document.createElement("div");
+    heading.className = "layout-section-heading";
+
+    const headingText = document.createElement("div");
+
+    const titleElement = document.createElement("h3");
+    titleElement.textContent = title;
+
+    headingText.appendChild(titleElement);
+
+    if (subtitle) {
+        const subtitleElement = document.createElement("p");
+        subtitleElement.textContent = subtitle;
+        headingText.appendChild(subtitleElement);
     }
 
+    heading.appendChild(headingText);
+    section.appendChild(heading);
+
+    return section;
+}
+
+// ======================================================
+// CREATE A SEAT / BERTH BUTTON
+// ======================================================
+
+function createPositionButton(seat, vehicleType, positionType) {
     const seatNumber = Number(seat.seat_number);
 
     const status = String(
@@ -559,59 +693,35 @@ function addSeatToRow(row, seat) {
 
     const isSelected = selectedSeats.includes(seatNumber);
 
+    const label = getSeatDisplayLabel(seatNumber, vehicleType);
+
     const button = document.createElement("button");
 
     button.type = "button";
 
-    button.className = `seat-icon ${
+    button.className = [
+        positionType,
         isBooked ? "booked" :
         isSelected ? "selected" :
         "available"
-    }`;
+    ].join(" ");
 
-    button.disabled = isBooked;
+    button.disabled = isBooked || isBooking;
+
+    button.textContent = label;
+
     button.setAttribute(
         "aria-label",
         isBooked
-            ? `Seat ${seatNumber} is booked`
-            : `Seat ${seatNumber}${isSelected ? ", selected" : ", available"}`
+            ? `${label} is booked`
+            : `${label}${isSelected ? ", selected" : ", available"}`
     );
 
     button.title = isBooked
-        ? `Seat ${seatNumber} is booked`
-        : `Select seat ${seatNumber}`;
-
-    button.innerHTML = `
-        <svg viewBox="0 0 40 44" aria-hidden="true">
-            <rect
-                x="8"
-                y="3"
-                width="24"
-                height="23"
-                rx="7"
-                fill="currentColor"
-                opacity=".9"
-            />
-
-            <rect
-                x="5"
-                y="21"
-                width="30"
-                height="13"
-                rx="5"
-                fill="currentColor"
-            />
-
-            <path
-                d="M9 32 V39 M31 32 V39"
-                stroke="currentColor"
-                stroke-width="4"
-                stroke-linecap="round"
-            />
-        </svg>
-
-        <span>${seatNumber}</span>
-    `;
+        ? `${label} is booked`
+        : isSelected
+            ? `${label} selected. Click to deselect.`
+            : `Select ${label}`;
 
     if (!isBooked) {
         button.addEventListener("click", () => {
@@ -619,11 +729,288 @@ function addSeatToRow(row, seat) {
         });
     }
 
-    row.appendChild(button);
+    return button;
 }
 
 // ======================================================
-// SELECT OR DESELECT SEATS
+// CREATE VERTICAL GRID WITH CENTRAL AISLE
+// ======================================================
+
+function createVerticalGrid(seats, vehicleType, positionType, seatsPerRow) {
+    const grid = document.createElement("div");
+
+    grid.className = positionType === "berth"
+        ? "berth-grid"
+        : "seater-grid";
+
+    for (let index = 0; index < seats.length; index += seatsPerRow) {
+        const rowSeats = seats.slice(index, index + seatsPerRow);
+
+        const row = document.createElement("div");
+
+        row.className = positionType === "berth"
+            ? "berth-row"
+            : "seater-row";
+
+        if (positionType === "berth") {
+            const leftBerth = rowSeats[0];
+            const rightBerth = rowSeats[1];
+
+            if (leftBerth) {
+                row.appendChild(
+                    createPositionButton(
+                        leftBerth,
+                        vehicleType,
+                        "berth"
+                    )
+                );
+            } else {
+                const empty = document.createElement("span");
+                empty.className = "empty-position";
+                row.appendChild(empty);
+            }
+
+            const aisle = document.createElement("div");
+            aisle.className = "layout-aisle";
+            row.appendChild(aisle);
+
+            if (rightBerth) {
+                row.appendChild(
+                    createPositionButton(
+                        rightBerth,
+                        vehicleType,
+                        "berth"
+                    )
+                );
+            } else {
+                const empty = document.createElement("span");
+                empty.className = "empty-position";
+                row.appendChild(empty);
+            }
+
+        } else {
+            // Two seats on the left side.
+            // Central aisle.
+            // Two seats on the right side.
+
+            for (let side = 0; side < 2; side++) {
+                const seat = rowSeats[side];
+
+                if (seat) {
+                    row.appendChild(
+                        createPositionButton(
+                            seat,
+                            vehicleType,
+                            "seat-block"
+                        )
+                    );
+                } else {
+                    const empty = document.createElement("span");
+                    empty.className = "empty-position";
+                    row.appendChild(empty);
+                }
+            }
+
+            const aisle = document.createElement("div");
+            aisle.className = "layout-aisle";
+            row.appendChild(aisle);
+
+            for (let side = 2; side < 4; side++) {
+                const seat = rowSeats[side];
+
+                if (seat) {
+                    row.appendChild(
+                        createPositionButton(
+                            seat,
+                            vehicleType,
+                            "seat-block"
+                        )
+                    );
+                } else {
+                    const empty = document.createElement("span");
+                    empty.className = "empty-position";
+                    row.appendChild(empty);
+                }
+            }
+        }
+
+        grid.appendChild(row);
+    }
+
+    return grid;
+}
+
+// ======================================================
+// SEATER VEHICLE - 20 CONVENTIONAL SEATS
+// ======================================================
+
+function renderSeaterLayout(sortedSeats) {
+    const section = createLayoutSection(
+        "Seater arrangement",
+        "20 conventional seats · Front to rear"
+    );
+
+    const grid = createVerticalGrid(
+        sortedSeats,
+        "seater",
+        "seat",
+        4
+    );
+
+    section.appendChild(grid);
+
+    seatLayout.appendChild(section);
+}
+
+// ======================================================
+// SLEEPER VEHICLE - 12 LOWER + 12 UPPER BERTHS
+//
+// IDs 1-12  = L1-L12
+// IDs 13-24 = U1-U12
+// ======================================================
+
+function renderSleeperLayout(sortedSeats) {
+    const lowerSeats = sortedSeats.filter(seat => {
+        const id = Number(seat.seat_number);
+        return id >= 1 && id <= 12;
+    });
+
+    const upperSeats = sortedSeats.filter(seat => {
+        const id = Number(seat.seat_number);
+        return id >= 13 && id <= 24;
+    });
+
+    const lowerSection = createLayoutSection(
+        "LOWER DECK",
+        "12 lower berths"
+    );
+
+    lowerSection.appendChild(
+        createVerticalGrid(
+            lowerSeats,
+            "sleeper",
+            "berth",
+            2
+        )
+    );
+
+    const upperSection = createLayoutSection(
+        "UPPER DECK",
+        "12 upper berths"
+    );
+
+    upperSection.appendChild(
+        createVerticalGrid(
+            upperSeats,
+            "sleeper",
+            "berth",
+            2
+        )
+    );
+
+    const decksContainer = document.createElement("div");
+    decksContainer.className = "sleeper-decks";
+
+    decksContainer.appendChild(lowerSection);
+    decksContainer.appendChild(upperSection);
+
+    seatLayout.appendChild(decksContainer);
+}
+
+// ======================================================
+// MIXED VEHICLE
+//
+// IDs 1-20  = S1-S20
+// IDs 21-30 = L1-L10
+// IDs 31-40 = U1-U10
+// ======================================================
+
+function renderMixedLayout(sortedSeats) {
+    const seaterSeats = sortedSeats.filter(seat => {
+        const id = Number(seat.seat_number);
+        return id >= 1 && id <= 20;
+    });
+
+    const lowerBerths = sortedSeats.filter(seat => {
+        const id = Number(seat.seat_number);
+        return id >= 21 && id <= 30;
+    });
+
+    const upperBerths = sortedSeats.filter(seat => {
+        const id = Number(seat.seat_number);
+        return id >= 31 && id <= 40;
+    });
+
+    const mixedContainer = document.createElement("div");
+    mixedContainer.className = "mixed-layout";
+
+    // Seater section
+
+    const seaterSection = createLayoutSection(
+        "SEATER SECTION",
+        "20 conventional seats"
+    );
+
+    seaterSection.appendChild(
+        createVerticalGrid(
+            seaterSeats,
+            "mixed",
+            "seat",
+            4
+        )
+    );
+
+    // Sleeper section
+
+    const sleeperSection = createLayoutSection(
+        "SLEEPER SECTION",
+        "10 lower + 10 upper berths"
+    );
+
+    const lowerSection = createLayoutSection(
+        "LOWER BERTHS",
+        "10 berths"
+    );
+
+    lowerSection.appendChild(
+        createVerticalGrid(
+            lowerBerths,
+            "mixed",
+            "berth",
+            2
+        )
+    );
+
+    const upperSection = createLayoutSection(
+        "UPPER BERTHS",
+        "10 berths"
+    );
+
+    upperSection.appendChild(
+        createVerticalGrid(
+            upperBerths,
+            "mixed",
+            "berth",
+            2
+        )
+    );
+
+    const berthDecks = document.createElement("div");
+    berthDecks.className = "mixed-berth-decks";
+
+    berthDecks.appendChild(lowerSection);
+    berthDecks.appendChild(upperSection);
+
+    sleeperSection.appendChild(berthDecks);
+
+    mixedContainer.appendChild(seaterSection);
+    mixedContainer.appendChild(sleeperSection);
+
+    seatLayout.appendChild(mixedContainer);
+}
+
+// ======================================================
+// SELECT OR DESELECT POSITIONS
 // ======================================================
 
 function toggleSeat(seatNumber) {
@@ -640,7 +1027,7 @@ function toggleSeat(seatNumber) {
     } else {
         if (selectedSeats.length >= MAX_SEATS_PER_BOOKING) {
             showToast(
-                `You can select a maximum of ${MAX_SEATS_PER_BOOKING} seats.`
+                `You can select a maximum of ${MAX_SEATS_PER_BOOKING} seats or berths.`
             );
             return;
         }
@@ -656,7 +1043,7 @@ function toggleSeat(seatNumber) {
 }
 
 // ======================================================
-// DISPLAY SELECTED SEATS
+// DISPLAY SELECTED SEATS / BERTHS
 // ======================================================
 
 function renderSelectedSeats() {
@@ -665,17 +1052,23 @@ function renderSelectedSeats() {
     if (selectedSeats.length === 0) {
         selectedSeatsContainer.innerHTML = `
             <span class="muted-text">
-                No seats selected
+                No seats or berths selected
             </span>
         `;
         return;
     }
 
+    const vehicleType = getVehicleType(selectedTrip);
+
     selectedSeats.forEach(seatNumber => {
         const chip = document.createElement("span");
 
         chip.className = "seat-chip";
-        chip.textContent = `Seat ${seatNumber}`;
+
+        chip.textContent = getSeatDisplayLabel(
+            seatNumber,
+            vehicleType
+        );
 
         selectedSeatsContainer.appendChild(chip);
     });
@@ -704,6 +1097,7 @@ function updateBookingSummary() {
 
 // ======================================================
 // CONFIRM BOOKING
+// Numeric backend seat IDs are sent unchanged.
 // ======================================================
 
 confirmButton.addEventListener("click", async function () {
@@ -711,7 +1105,7 @@ confirmButton.addEventListener("click", async function () {
 
     if (!selectedTrip || selectedSeats.length === 0) {
         showToast(
-            "Please select a trip and at least one seat."
+            "Please select a trip and at least one seat or berth."
         );
         return;
     }
@@ -741,6 +1135,8 @@ confirmButton.addEventListener("click", async function () {
 
     const bookingPayload = {
         trip_id: Number(selectedTrip.trip_id ?? selectedTrip.id),
+
+        // Keep numeric IDs for backend compatibility.
         seat_numbers: [...selectedSeats]
     };
 
@@ -780,6 +1176,7 @@ confirmButton.addEventListener("click", async function () {
 
         confirmButton.textContent = "Confirm Booking";
 
+        renderSeatLayout();
         updateBookingSummary();
     }
 });
@@ -870,9 +1267,21 @@ function resetSelectedTrip() {
 
     seatLayout.innerHTML = `
         <div class="seat-placeholder">
-            Search for a trip and select it to load the seat layout.
+            Search for a trip and select it to load the vehicle layout.
         </div>
     `;
+
+    if (busContainer) {
+        busContainer.classList.remove(
+            "seater-vehicle",
+            "sleeper-vehicle",
+            "mixed-vehicle"
+        );
+    }
+
+    if (columnLabels) {
+        columnLabels.hidden = true;
+    }
 
     bookingResult.hidden = true;
 
