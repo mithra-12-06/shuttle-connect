@@ -912,13 +912,20 @@ async function handleAdminRoute(req, res, pathname, helpers) {
             return sendJson(res,200,{success:true,total:rows.length,applications:rows});
         }
 
-        const captainApplicationMatch = pathname.match(
-            /^\\/api\\/admin\\/captain-applications\\/(\\d+)\\/(approve|reject)$/
-        );
+        const captainApplicationParts = pathname.split("/");
+        const captainApplicationIdPart = captainApplicationParts[4];
+        const captainApplicationAction = captainApplicationParts[5];
+        const isCaptainApplicationAction =
+            captainApplicationParts.length === 6 &&
+            captainApplicationParts[1] === "api" &&
+            captainApplicationParts[2] === "admin" &&
+            captainApplicationParts[3] === "captain-applications" &&
+            /^\\d+$/.test(captainApplicationIdPart || "") &&
+            ["approve", "reject"].includes(captainApplicationAction);
 
-        if (captainApplicationMatch && req.method === "POST") {
-            const applicationId = Number(captainApplicationMatch[1]);
-            const action = captainApplicationMatch[2];
+        if (isCaptainApplicationAction && req.method === "POST") {
+            const applicationId = Number(captainApplicationIdPart);
+            const action = captainApplicationAction;
             if (!Number.isSafeInteger(applicationId) || applicationId <= 0) {
                 return sendJson(res,400,{success:false,message:"Invalid captain application ID."});
             }
