@@ -10,6 +10,8 @@ const handleAuthRoute = require('./routes/authRoutes');
 const handleTripRoute = require('./routes/tripRoutes');
 const handleBookingRoute = require('./routes/bookingRoutes');
 const handleAdminRoute = require('./routes/adminRoutes');
+const handleCaptainRoute = require('./routes/captainRoutes');
+const handleLastMileRoute = require('./routes/lastMileRoutes');
 
 // ==========================================
 // 1. READ JSON REQUEST BODY
@@ -168,6 +170,26 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ======================================
+    // CAPTAIN PORTAL ROUTES
+    // ======================================
+
+    if (pathname.startsWith('/api/captain/')) {
+        const captainHandled = await handleCaptainRoute(
+            req,
+            res,
+            pathname,
+            {
+                readJsonBody,
+                sendJson
+            }
+        );
+
+        if (captainHandled) {
+            return;
+        }
+    }
+
+    // ======================================
     // HOME ROUTE
     // GET /
     // ======================================
@@ -235,7 +257,7 @@ const server = http.createServer(async (req, res) => {
     // ======================================
     // PASSENGER BOOKING ROUTES
     // PATCH /api/passenger/bookings/:id/cancel
-    // GET   /api/passenger/bookings/:id/ticket.pdf
+    // GET /api/passenger/bookings/:id/ticket.pdf
     // ======================================
 
     const bookingHandled = await handleBookingRoute(
@@ -249,6 +271,26 @@ const server = http.createServer(async (req, res) => {
     );
 
     if (bookingHandled) {
+        return;
+    }
+
+    // ======================================
+    // PASSENGER LAST-MILE ROUTES
+    // POST /api/passenger/last-mile/rides
+    // ======================================
+
+    const lastMileHandled = await handleLastMileRoute(
+        req,
+        res,
+        pathname,
+        {
+            readJsonBody,
+            sendJson,
+            authenticatePassenger
+        }
+    );
+
+    if (lastMileHandled) {
         return;
     }
 
@@ -487,7 +529,7 @@ const server = http.createServer(async (req, res) => {
             }
 
             // ======================================
-            // NEW: GENERATE UNIQUE TICKET CODE
+            // GENERATE UNIQUE TICKET CODE
             // ======================================
 
             const ticketCode =
@@ -495,8 +537,8 @@ const server = http.createServer(async (req, res) => {
                 crypto.randomBytes(16).toString('hex').toUpperCase();
 
             // ======================================
-            // NEW: SAVE TICKET IN DATABASE
-            // IMPORTANT: SAME BOOKING TRANSACTION
+            // SAVE TICKET IN DATABASE
+            // SAME BOOKING TRANSACTION
             // ======================================
 
             await connection.execute(

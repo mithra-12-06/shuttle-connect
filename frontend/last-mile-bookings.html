@@ -490,10 +490,9 @@
                     <strong>Journey details ready for preview.</strong>
 
                     <p>
-                        This is currently a frontend preview.
-                        Last-Mile ride booking, route calculation,
-                        fare calculation and captain assignment have
-                        not yet been connected to a backend API.
+                        Your journey locations are ready.
+                        Select a transport service to view the estimated
+                        distance, travel time and fare.
                     </p>
                 </div>
 
@@ -513,13 +512,18 @@
                     <div>
                         <h2 id="transportSelectionHeading">Choose Your Transport Service</h2>
                         <p>
-                            Select how you would like to travel from your shuttle
-                            drop-off point to your final destination.
+                            Select how you would like to travel from your
+                            pickup point to your final destination.
                         </p>
                     </div>
                 </div>
 
-                <div class="transport-service-grid" role="group" aria-label="Transport service options">
+                <div
+                    class="transport-service-grid"
+                    role="group"
+                    aria-label="Transport service options"
+                >
+
                     <button
                         type="button"
                         class="transport-service-card"
@@ -555,10 +559,12 @@
                         <span class="transport-service-description">Comfortable private travel</span>
                         <span class="transport-service-check" aria-hidden="true">✓</span>
                     </button>
+
                 </div>
 
                 <p class="transport-selection-hint">
-                    Choose one service. Your captain will be allocated by the admin.
+                    Choose one service. Your ride request will be sent
+                    to eligible captains.
                 </p>
 
                 <button
@@ -579,21 +585,23 @@
                 ></div>
 
                 <p class="transport-selection-disclaimer">
-                    UI preview only: this preference is not submitted to the server
-                    or saved to your account. Captain allocation is not connected yet.
+                    Your estimated fare is calculated using the route
+                    distance and selected transport service. The final
+                    fare may vary.
                 </p>
+
             </section>
 
 
             <!-- ROUTE ESTIMATES -->
-            <section class="route-estimates">
+            <section class="route-estimates" aria-live="polite">
 
                 <div class="estimate-card">
                     <div class="estimate-icon">↗</div>
 
                     <div>
                         <span class="estimate-label">Distance</span>
-                        <strong>Not calculated</strong>
+                        <strong id="estimatedDistance">Not calculated</strong>
                     </div>
                 </div>
 
@@ -602,7 +610,7 @@
 
                     <div>
                         <span class="estimate-label">Travel Time</span>
-                        <strong>Not calculated</strong>
+                        <strong id="estimatedTravelTime">Not calculated</strong>
                     </div>
                 </div>
 
@@ -611,7 +619,7 @@
 
                     <div>
                         <span class="estimate-label">Estimated Fare</span>
-                        <strong>Not calculated</strong>
+                        <strong id="estimatedFare">Select a vehicle</strong>
                     </div>
                 </div>
 
@@ -627,7 +635,7 @@
 
                         <p>
                             Captain details will appear here when
-                            Last-Mile ride assignment is integrated.
+                            a captain accepts your Last-Mile ride request.
                         </p>
                     </div>
                 </div>
@@ -640,8 +648,8 @@
                         <strong>Captain Not Assigned</strong>
 
                         <p>
-                            No captain has been assigned to this
-                            journey preview.
+                            Your captain details will appear here
+                            after a captain accepts your ride request.
                         </p>
                     </div>
 

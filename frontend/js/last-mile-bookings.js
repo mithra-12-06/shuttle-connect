@@ -3,11 +3,9 @@
 
 // =====================================================
 // SHUTTLECONNECT - LAST-MILE BOOKINGS
-// GPS + Manual Pickup Search + Destination Autocomplete
-// Photon Geocoding + Leaflet
-//
-// Frontend preview only.
-// No Last-Mile booking API exists yet.
+// GPS + Photon Autocomplete + Leaflet
+// OSRM Route Estimation + Fare Calculation
+// Passenger Last-Mile Ride Request API
 // =====================================================
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -17,6 +15,37 @@ const NOMINATIM_URL =
 
 const PHOTON_URL =
     "https://photon.komoot.io/api/";
+
+const OSRM_URL =
+    "https://router.project-osrm.org/route/v1/driving/";
+
+// =====================================================
+// FARE CONFIGURATION
+// Must match backend demonstration rates.
+// =====================================================
+
+const FARE_RATES = {
+    two_wheeler: {
+        baseFare: 20,
+        perKm: 8
+    },
+
+    auto: {
+        baseFare: 30,
+        perKm: 15
+    },
+
+    car: {
+        baseFare: 50,
+        perKm: 20
+    }
+};
+
+const TRANSPORT_TYPE_MAPPING = {
+    Bike: "two_wheeler",
+    Auto: "auto",
+    Car: "car"
+};
 
 // =====================================================
 // DOM ELEMENTS
@@ -82,23 +111,31 @@ const introDropoff =
 const introDestination =
     document.getElementById("introDestination");
 
+const estimatedDistance =
+    document.getElementById("estimatedDistance");
+
+const estimatedTravelTime =
+    document.getElementById("estimatedTravelTime");
+
+const estimatedFare =
+    document.getElementById("estimatedFare");
+
 // =====================================================
 // APPLICATION STATE
 // =====================================================
 
 let upcomingBookings = [];
+
 let selectedBooking = null;
+
 let selectedTransportService = "";
 
-// Pickup location
 let passengerCoordinates = null;
 let passengerLocationText = "";
 
-// Destination location
 let destinationCoordinates = null;
 let destinationLocationText = "";
 
-// Leaflet map
 let lastMileMap = null;
 
 let passengerMarker = null;
@@ -107,11 +144,9 @@ let accuracyCircle = null;
 
 let mapInitialized = false;
 
-// GPS interface
 let locationButton = null;
 let locationStatus = null;
 
-// Search state
 let pickupSearchTimer = null;
 let destinationSearchTimer = null;
 
@@ -123,6 +158,13 @@ let destinationSearchRequestId = 0;
 
 let pickupSearchResults = [];
 let destinationSearchResults = [];
+
+let routeEstimate = null;
+let routeEstimateController = null;
+let routeEstimateRequestId = 0;
+
+let isSubmittingRide = false;
+let rideRequestCreated = false;
 
 // =====================================================
 // AUTHENTICATION
@@ -145,7 +187,9 @@ function parseDate(value) {
 
     const date = new Date(normalized);
 
-    return Number.isNaN(date.getTime()) ? null : date;
+    return Number.isNaN(date.getTime())
+        ? null
+        : date;
 }
 
 function formatDateTime(value) {
@@ -165,28 +209,44 @@ function formatDateTime(value) {
 
 // =====================================================
 // API REQUEST
-// Existing backend endpoints are unchanged.
+// Supports existing GET requests and new POST request.
 // =====================================================
 
-async function apiRequest(endpoint) {
+async function apiRequest(endpoint, options = {}) {
     const token = getAuthToken();
 
     if (!token) {
         throw new Error(
-            "Please log in to view your shuttle bookings."
+            "Please log in to continue."
         );
+    }
+
+    const method = options.method || "GET";
+
+    const headers = {
+        Authorization: `Bearer ${token}`,
+        ...(options.headers || {})
+    };
+
+    if (options.body !== undefined) {
+        headers["Content-Type"] = "application/json";
     }
 
     let response;
 
     try {
-        response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`
+        response = await fetch(
+            `${API_BASE_URL}${endpoint}`,
+            {
+                method,
+                headers,
+                body: options.body
             }
-        });
-    } catch {
+        );
+
+    } catch (error) {
+        console.error("API connection error:", error);
+
         throw new Error(
             "Unable to connect to ShuttleConnect. Please check whether the backend server is running."
         );
@@ -199,6 +259,7 @@ async function apiRequest(endpoint) {
     if (responseText) {
         try {
             result = JSON.parse(responseText);
+
         } catch {
             throw new Error(
                 "The server returned an invalid response."
@@ -218,7 +279,7 @@ async function apiRequest(endpoint) {
         throw new Error(
             result.message ||
             result.error ||
-            "Unable to retrieve your shuttle bookings."
+            "The requested operation could not be completed."
         );
     }
 
@@ -247,7 +308,8 @@ function isUpcomingBooking(booking) {
         booking.departure_datetime
     );
 
-    return departure && departure.getTime() > Date.now();
+    return departure &&
+        departure.getTime() > Date.now();
 }
 
 // =====================================================
@@ -487,8 +549,6 @@ function initializeGPSInterface() {
 
 // =====================================================
 // MAP INITIALIZATION
-// Initial view covers Tamil Nadu.
-// This is not a location restriction.
 // =====================================================
 
 async function initializeLastMileMap() {
@@ -670,7 +730,6 @@ function fitMapToSelectedLocations() {
 
 // =====================================================
 // REVERSE GEOCODING
-// GPS coordinates -> readable address.
 // =====================================================
 
 async function reverseGeocode(latitude, longitude) {
@@ -848,6 +907,7 @@ async function handleLocationSuccess(position) {
 
     updatePagePreview();
     updateReviewSummary();
+    refreshRouteEstimate();
 
     try {
         await updatePickupMarker();
@@ -956,7 +1016,6 @@ function setLocationStatus(message) {
 
 // =====================================================
 // PHOTON LOCATION SEARCH
-// Uses OpenStreetMap-based global geocoding.
 // =====================================================
 
 async function searchLocations(query, signal) {
@@ -1103,7 +1162,6 @@ function renderSuggestions(container, results, onSelect) {
         button.appendChild(icon);
         button.appendChild(textWrapper);
 
-        // mousedown prevents input blur before selection.
         button.addEventListener(
             "mousedown",
             event => event.preventDefault()
@@ -1128,7 +1186,6 @@ function handlePickupSearchInput() {
     const query =
         pickupLocationInput.value.trim();
 
-    // A changed query invalidates the old selected location.
     passengerCoordinates = null;
     passengerLocationText = "";
 
@@ -1151,6 +1208,7 @@ function handlePickupSearchInput() {
 
     updatePagePreview();
     updateReviewSummary();
+    refreshRouteEstimate();
 
     if (pickupSuggestions) {
         pickupSuggestions.hidden = true;
@@ -1283,9 +1341,11 @@ async function selectPickupSuggestion(result) {
 
     updatePagePreview();
     updateReviewSummary();
+    refreshRouteEstimate();
 
     try {
         await updatePickupMarker();
+
     } catch (error) {
         console.error(
             "Unable to display pickup marker:",
@@ -1306,7 +1366,6 @@ function handleDestinationSearchInput() {
     const query =
         finalDestination.value.trim();
 
-    // Typing again invalidates the previous selected destination.
     destinationCoordinates = null;
     destinationLocationText = "";
 
@@ -1324,6 +1383,7 @@ function handleDestinationSearchInput() {
 
     updatePagePreview();
     updateReviewSummary();
+    refreshRouteEstimate();
 
     if (destinationSuggestions) {
         destinationSuggestions.hidden = true;
@@ -1447,9 +1507,11 @@ async function selectDestinationSuggestion(result) {
 
     updatePagePreview();
     updateReviewSummary();
+    refreshRouteEstimate();
 
     try {
         await updateDestinationMarker();
+
     } catch (error) {
         console.error(
             "Unable to display destination marker:",
@@ -1563,8 +1625,228 @@ function updateReviewSummary() {
 }
 
 // =====================================================
+// ROUTE ESTIMATION
+// Uses OSRM driving route.
+// Coordinates: longitude,latitude
+// =====================================================
+
+function resetRouteEstimate(message = "Not calculated") {
+    routeEstimate = null;
+
+    if (estimatedDistance) {
+        estimatedDistance.textContent = message;
+    }
+
+    if (estimatedTravelTime) {
+        estimatedTravelTime.textContent = message;
+    }
+
+    updateEstimatedFare();
+}
+
+function getSelectedTransportType() {
+    return TRANSPORT_TYPE_MAPPING[
+        selectedTransportService
+    ] || null;
+}
+
+function calculateClientFare(distanceKm, transportType) {
+    const rate = FARE_RATES[transportType];
+
+    if (!rate) return null;
+
+    const fare =
+        rate.baseFare + distanceKm * rate.perKm;
+
+    return Math.round(fare * 100) / 100;
+}
+
+function formatDuration(minutes) {
+    const totalMinutes = Math.round(minutes);
+
+    if (totalMinutes < 60) {
+        return `${totalMinutes} min`;
+    }
+
+    const hours = Math.floor(totalMinutes / 60);
+    const remainingMinutes = totalMinutes % 60;
+
+    return remainingMinutes
+        ? `${hours} hr ${remainingMinutes} min`
+        : `${hours} hr`;
+}
+
+function updateEstimatedFare() {
+    if (!estimatedFare) return;
+
+    if (!selectedTransportService) {
+        estimatedFare.textContent = "Select a vehicle";
+        return;
+    }
+
+    if (!routeEstimate) {
+        estimatedFare.textContent = "Awaiting route";
+        return;
+    }
+
+    const transportType =
+        getSelectedTransportType();
+
+    const fare = calculateClientFare(
+        routeEstimate.distanceKm,
+        transportType
+    );
+
+    if (fare === null) {
+        estimatedFare.textContent = "Unavailable";
+        return;
+    }
+
+    estimatedFare.textContent =
+        `₹${fare.toFixed(2)}`;
+}
+
+async function refreshRouteEstimate() {
+    routeEstimateRequestId++;
+
+    const requestId = routeEstimateRequestId;
+
+    if (routeEstimateController) {
+        routeEstimateController.abort();
+        routeEstimateController = null;
+    }
+
+    routeEstimate = null;
+
+    if (
+        !passengerCoordinates ||
+        !destinationCoordinates
+    ) {
+        resetRouteEstimate();
+        return;
+    }
+
+    if (estimatedDistance) {
+        estimatedDistance.textContent = "Calculating...";
+    }
+
+    if (estimatedTravelTime) {
+        estimatedTravelTime.textContent = "Calculating...";
+    }
+
+    updateEstimatedFare();
+
+    routeEstimateController =
+        new AbortController();
+
+    const pickupLongitude =
+        passengerCoordinates.longitude;
+
+    const pickupLatitude =
+        passengerCoordinates.latitude;
+
+    const destinationLongitude =
+        destinationCoordinates.longitude;
+
+    const destinationLatitude =
+        destinationCoordinates.latitude;
+
+    const coordinates =
+        `${pickupLongitude},${pickupLatitude};` +
+        `${destinationLongitude},${destinationLatitude}`;
+
+    const url =
+        `${OSRM_URL}${coordinates}?overview=false`;
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            signal: routeEstimateController.signal
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                "Route service returned an unsuccessful response."
+            );
+        }
+
+        const result = await response.json();
+
+        if (requestId !== routeEstimateRequestId) {
+            return;
+        }
+
+        if (
+            result.code !== "Ok" ||
+            !Array.isArray(result.routes) ||
+            !result.routes.length
+        ) {
+            throw new Error(
+                "No road route was found between these locations."
+            );
+        }
+
+        const route = result.routes[0];
+
+        routeEstimate = {
+            distanceKm: route.distance / 1000,
+            durationMinutes: route.duration / 60
+        };
+
+        if (estimatedDistance) {
+            estimatedDistance.textContent =
+                `${routeEstimate.distanceKm.toFixed(2)} km`;
+        }
+
+        if (estimatedTravelTime) {
+            estimatedTravelTime.textContent =
+                formatDuration(routeEstimate.durationMinutes);
+        }
+
+        updateEstimatedFare();
+
+        console.log(
+            "Last-Mile route estimate:",
+            routeEstimate
+        );
+
+    } catch (error) {
+        if (error.name === "AbortError") {
+            return;
+        }
+
+        console.error(
+            "Route estimation error:",
+            error
+        );
+
+        if (requestId !== routeEstimateRequestId) {
+            return;
+        }
+
+        routeEstimate = null;
+
+        if (estimatedDistance) {
+            estimatedDistance.textContent =
+                "Unavailable";
+        }
+
+        if (estimatedTravelTime) {
+            estimatedTravelTime.textContent =
+                "Unavailable";
+        }
+
+        if (estimatedFare) {
+            estimatedFare.textContent =
+                selectedTransportService
+                    ? "Unavailable"
+                    : "Select a vehicle";
+        }
+    }
+}
+
+// =====================================================
 // REVIEW BUTTON
-// Frontend preview only.
 // =====================================================
 
 function reviewRideDetails() {
@@ -1608,6 +1890,230 @@ function reviewRideDetails() {
             block: "start"
         });
     }
+
+    refreshRouteEstimate();
+}
+
+// =====================================================
+// SUBMIT LAST-MILE RIDE REQUEST
+// POST /api/passenger/last-mile/rides
+// =====================================================
+
+async function submitLastMileRideRequest() {
+    if (isSubmittingRide || rideRequestCreated) {
+        return;
+    }
+
+    if (!getAuthToken()) {
+        displayTransportStatus(
+            "Please log in before requesting a last-mile ride."
+        );
+
+        return;
+    }
+
+    if (!selectedBooking) {
+        displayTransportStatus(
+            "Please select a confirmed shuttle booking."
+        );
+
+        return;
+    }
+
+    if (!passengerCoordinates || !destinationCoordinates) {
+        displayTransportStatus(
+            "Please select both pickup and destination locations."
+        );
+
+        return;
+    }
+
+    const transportType =
+        getSelectedTransportType();
+
+    if (!transportType) {
+        displayTransportStatus(
+            "Please select Bike, Auto or Car."
+        );
+
+        return;
+    }
+
+    if (
+        !passengerLocationText ||
+        !destinationLocationText
+    ) {
+        displayTransportStatus(
+            "Valid pickup and destination addresses are required."
+        );
+
+        return;
+    }
+
+    const requestBody = {
+        shuttle_booking_id: Number(
+            selectedBooking.booking_id
+        ),
+
+        transport_type: transportType,
+
+        pickup_address: passengerLocationText,
+
+        pickup_latitude:
+            passengerCoordinates.latitude,
+
+        pickup_longitude:
+            passengerCoordinates.longitude,
+
+        dropoff_address: destinationLocationText,
+
+        dropoff_latitude:
+            destinationCoordinates.latitude,
+
+        dropoff_longitude:
+            destinationCoordinates.longitude
+    };
+
+    isSubmittingRide = true;
+
+    if (confirmTransportSelectionButton) {
+        confirmTransportSelectionButton.disabled = true;
+
+        confirmTransportSelectionButton.textContent =
+            "Submitting Ride Request...";
+    }
+
+    displayTransportStatus(
+        "Submitting your last-mile ride request. Please wait..."
+    );
+
+    try {
+        const result = await apiRequest(
+            "/passenger/last-mile/rides",
+            {
+                method: "POST",
+                body: JSON.stringify(requestBody)
+            }
+        );
+
+        if (!result.success || !result.ride) {
+            throw new Error(
+                result.message ||
+                "The ride request could not be created."
+            );
+        }
+
+        const ride = result.ride;
+
+        rideRequestCreated = true;
+
+        // Display authoritative backend estimates.
+
+        if (estimatedDistance) {
+            estimatedDistance.textContent =
+                `${Number(ride.distance_km).toFixed(2)} km`;
+        }
+
+        if (estimatedTravelTime) {
+            estimatedTravelTime.textContent =
+                formatDuration(
+                    Number(ride.estimated_duration_minutes)
+                );
+        }
+
+        if (estimatedFare) {
+            estimatedFare.textContent =
+                `₹${Number(ride.estimated_fare).toFixed(2)}`;
+        }
+
+        // Display successful ride request.
+
+        displayTransportStatus(
+            `${result.message || "Last-mile ride requested successfully."} Reference: ${ride.ride_reference}. Status: ${ride.ride_status}. Estimated fare: ₹${Number(ride.estimated_fare).toFixed(2)}.`
+        );
+
+        if (confirmTransportSelectionButton) {
+            confirmTransportSelectionButton.textContent =
+                "Ride Request Submitted";
+        }
+
+        // Prevent changing transport after submission.
+
+        transportServiceCards.forEach(card => {
+            card.disabled = true;
+        });
+
+        // Update captain placeholder.
+
+        const captainPlaceholder =
+            document.querySelector(".captain-placeholder");
+
+        if (captainPlaceholder) {
+            const heading =
+                captainPlaceholder.querySelector("strong");
+
+            const description =
+                captainPlaceholder.querySelector("p");
+
+            if (heading) {
+                heading.textContent =
+                    "Waiting for Captain";
+            }
+
+            if (description) {
+                description.textContent =
+                    `Your ride request ${ride.ride_reference} has been submitted. A captain has not been assigned yet.`;
+            }
+        }
+
+        console.log(
+            "Last-Mile ride request created:",
+            ride
+        );
+
+    } catch (error) {
+        console.error(
+            "Last-Mile ride submission error:",
+            error
+        );
+
+        displayTransportStatus(
+            error.message
+        );
+
+    } finally {
+        isSubmittingRide = false;
+
+        if (confirmTransportSelectionButton) {
+            confirmTransportSelectionButton.disabled =
+                rideRequestCreated ||
+                !selectedTransportService;
+
+            if (!rideRequestCreated) {
+                confirmTransportSelectionButton.textContent =
+                    "Confirm Transport Preference";
+            }
+        }
+    }
+}
+
+// =====================================================
+// TRANSPORT STATUS MESSAGE
+// =====================================================
+
+function displayTransportStatus(message) {
+    if (!transportSelectionStatus) {
+        alert(message);
+        return;
+    }
+
+    transportSelectionStatus.textContent = message;
+    transportSelectionStatus.hidden = false;
+
+    transportSelectionStatus.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
 }
 
 // =====================================================
@@ -1826,11 +2332,14 @@ if (reviewRideButton) {
 
 // =====================================================
 // TRANSPORT SERVICE SELECTION
-// Frontend UI only. No request is sent to the backend.
 // =====================================================
 
 transportServiceCards.forEach(card => {
     card.addEventListener("click", () => {
+        if (rideRequestCreated || isSubmittingRide) {
+            return;
+        }
+
         selectedTransportService =
             card.dataset.transportService || "";
 
@@ -1852,27 +2361,23 @@ transportServiceCards.forEach(card => {
             transportSelectionStatus.hidden = true;
             transportSelectionStatus.textContent = "";
         }
+
+        // Update fare for selected vehicle.
+
+        updateEstimatedFare();
     });
 });
 
+// =====================================================
+// CONFIRM TRANSPORT BUTTON
+// Now submits the actual ride request.
+// =====================================================
+
 if (confirmTransportSelectionButton) {
-    confirmTransportSelectionButton.addEventListener("click", () => {
-        if (!selectedTransportService) {
-            return;
-        }
-
-        if (transportSelectionStatus) {
-            transportSelectionStatus.textContent =
-                `${selectedTransportService} selected. Your transport preference is displayed here; the admin will allocate a captain separately.`;
-
-            transportSelectionStatus.hidden = false;
-        }
-
-        transportSelectionStatus?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest"
-        });
-    });
+    confirmTransportSelectionButton.addEventListener(
+        "click",
+        submitLastMileRideRequest
+    );
 }
 
 // =====================================================
@@ -1881,11 +2386,16 @@ if (confirmTransportSelectionButton) {
 
 async function initializeLastMileBookingsPage() {
     initializeMobileNavigation();
+
     initializeGPSInterface();
+
     initializeSuggestionDismissal();
+
+    resetRouteEstimate();
 
     try {
         await initializeLastMileMap();
+
     } catch (error) {
         console.error(
             "Initial map loading failed:",
@@ -1894,6 +2404,7 @@ async function initializeLastMileBookingsPage() {
     }
 
     await loadPassengerProfile();
+
     await loadUpcomingBookings();
 }
 
