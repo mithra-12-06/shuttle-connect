@@ -1059,3 +1059,141 @@ a {
     }
 
 }
+
+
+/* =====================================================
+   TRANSPORT SERVICE SELECTION - FRONTEND UI
+===================================================== */
+
+.transport-selection-panel {
+    border-color: #d9e3f4;
+}
+
+.transport-service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.transport-service-card {
+    position: relative;
+    min-height: 174px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 22px;
+    border: 1px solid var(--lm-border);
+    border-radius: 15px;
+    background: #fbfcff;
+    color: var(--lm-primary);
+    text-align: left;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transport-service-card:hover {
+    transform: translateY(-3px);
+    border-color: #9aafd8;
+    box-shadow: 0 10px 24px rgba(22, 38, 75, 0.08);
+}
+
+.transport-service-card[aria-pressed="true"] {
+    border: 2px solid #24447f;
+    padding: 21px;
+    background: #f0f5ff;
+    box-shadow: 0 8px 22px rgba(36, 68, 127, 0.12);
+}
+
+.transport-service-icon {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.transport-service-name {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.transport-service-description {
+    color: var(--lm-muted);
+    font-size: 12px;
+}
+
+.transport-service-check {
+    position: absolute;
+    top: 13px;
+    right: 14px;
+    width: 23px;
+    height: 23px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #24447f;
+    color: #ffffff;
+    font-size: 12px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.transport-service-card[aria-pressed="true"] .transport-service-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.transport-selection-hint {
+    margin: 18px 0 0;
+    color: var(--lm-muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.transport-confirm-button {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 18px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(120deg, #172554, #284b91);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.transport-confirm-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.transport-confirm-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.transport-selection-status {
+    margin-top: 15px;
+    padding: 14px 16px;
+    border: 1px solid #ccebd9;
+    border-radius: 10px;
+    background: #f0faf4;
+    color: #176c47;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.transport-selection-disclaimer {
+    margin: 14px 0 0;
+    color: var(--lm-muted);
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+    .transport-service-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .transport-service-card {
+        min-height: 125px;
+    }
+}
