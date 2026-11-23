@@ -958,16 +958,22 @@ async function handleAdminRoute(req, res, pathname, helpers) {
                 if (action === "approve") {
                     await connection.execute(
                         `UPDATE captain_applications
-                         SET application_status='approved', rejection_reason=NULL
+                         SET application_status='approved',
+                             reviewed_by=?,
+                             reviewed_at=NOW(),
+                             rejection_reason=NULL
                          WHERE application_id=?`,
-                        [applicationId]
+                        [admin.user_id, applicationId]
                     );
                 } else {
                     await connection.execute(
                         `UPDATE captain_applications
-                         SET application_status='rejected', rejection_reason=?
+                         SET application_status='rejected',
+                             reviewed_by=?,
+                             reviewed_at=NOW(),
+                             rejection_reason=?
                          WHERE application_id=?`,
-                        [reason,applicationId]
+                        [admin.user_id, reason, applicationId]
                     );
                 }
                 await connection.commit();
