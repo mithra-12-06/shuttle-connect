@@ -920,7 +920,7 @@ async function handleAdminRoute(req, res, pathname, helpers) {
             captainApplicationParts[1] === "api" &&
             captainApplicationParts[2] === "admin" &&
             captainApplicationParts[3] === "captain-applications" &&
-            /^\\d+$/.test(captainApplicationIdPart || "") &&
+            /^[0-9]+$/.test(captainApplicationIdPart || "") &&
             ["approve", "reject"].includes(captainApplicationAction);
 
         if (isCaptainApplicationAction && req.method === "POST") {
