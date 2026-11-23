@@ -500,6 +500,91 @@
             </section>
 
 
+            <!-- STEP 06: TRANSPORT SERVICE SELECTION -->
+            <section
+                class="content-card transport-selection-panel"
+                id="transportSelectionSection"
+                aria-labelledby="transportSelectionHeading"
+                hidden
+            >
+                <div class="section-heading">
+                    <span class="section-step">06</span>
+
+                    <div>
+                        <h2 id="transportSelectionHeading">Choose Your Transport Service</h2>
+                        <p>
+                            Select how you would like to travel from your shuttle
+                            drop-off point to your final destination.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="transport-service-grid" role="group" aria-label="Transport service options">
+                    <button
+                        type="button"
+                        class="transport-service-card"
+                        data-transport-service="Bike"
+                        aria-pressed="false"
+                    >
+                        <span class="transport-service-icon" aria-hidden="true">🏍️</span>
+                        <span class="transport-service-name">Bike</span>
+                        <span class="transport-service-description">Quick solo travel</span>
+                        <span class="transport-service-check" aria-hidden="true">✓</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="transport-service-card"
+                        data-transport-service="Auto"
+                        aria-pressed="false"
+                    >
+                        <span class="transport-service-icon" aria-hidden="true">🛺</span>
+                        <span class="transport-service-name">Auto</span>
+                        <span class="transport-service-description">Convenient short trips</span>
+                        <span class="transport-service-check" aria-hidden="true">✓</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="transport-service-card"
+                        data-transport-service="Car"
+                        aria-pressed="false"
+                    >
+                        <span class="transport-service-icon" aria-hidden="true">🚗</span>
+                        <span class="transport-service-name">Car</span>
+                        <span class="transport-service-description">Comfortable private travel</span>
+                        <span class="transport-service-check" aria-hidden="true">✓</span>
+                    </button>
+                </div>
+
+                <p class="transport-selection-hint">
+                    Choose one service. Your captain will be allocated by the admin.
+                </p>
+
+                <button
+                    type="button"
+                    class="transport-confirm-button"
+                    id="confirmTransportSelectionButton"
+                    disabled
+                >
+                    Confirm Transport Preference
+                </button>
+
+                <div
+                    class="transport-selection-status"
+                    id="transportSelectionStatus"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+                <p class="transport-selection-disclaimer">
+                    UI preview only: this preference is not submitted to the server
+                    or saved to your account. Captain allocation is not connected yet.
+                </p>
+            </section>
+
+
             <!-- ROUTE ESTIMATES -->
             <section class="route-estimates">
 
