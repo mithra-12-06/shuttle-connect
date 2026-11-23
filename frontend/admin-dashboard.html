@@ -59,6 +59,12 @@
                     <span>Passengers</span>
                 </button>
 
+                <!-- CAPTAIN APPLICATIONS -->
+                <button class="nav-item" data-view="captainApplications">
+                    <span class="nav-icon">♙</span>
+                    <span>Captain Applications</span>
+                </button>
+
                 <div class="sidebar-label sidebar-label-spaced">
                     OPERATIONS
                 </div>
@@ -388,6 +394,48 @@
                             <div class="empty-icon">♙</div>
                             <strong>Passenger data is not connected</strong>
                             <p>Passenger management requires an authorized admin API.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CAPTAIN APPLICATIONS -->
+                <section class="admin-view" id="view-captainApplications">
+                    <div class="section-intro">
+                        <div>
+                            <h2>Captain Applications</h2>
+                            <p>Review and manage applications submitted by Last-Mile captains.</p>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Submitted Applications</h3>
+                                <p>Review applicant details and approve or reject applications.</p>
+                            </div>
+                            <span class="panel-tag">Captain Management</span>
+                        </div>
+                        <div class="table-toolbar">
+                            <input type="search" class="table-search"
+                                id="captainApplicationSearch"
+                                placeholder="Search applicant name or email...">
+                            <select id="captainApplicationStatus">
+                                <option value="pending">Pending Applications</option>
+                                <option value="approved">Approved Applications</option>
+                                <option value="rejected">Rejected Applications</option>
+                                <option value="all">All Applications</option>
+                            </select>
+                        </div>
+                        <div class="table-scroll">
+                            <table>
+                                <thead><tr>
+                                    <th>Application ID</th><th>Applicant</th><th>Email</th>
+                                    <th>Phone</th><th>Vehicle Type</th><th>Vehicle Details</th>
+                                    <th>Licence Expiry</th><th>Status</th><th>Action</th>
+                                </tr></thead>
+                                <tbody id="captainApplicationsTableBody">
+                                    <tr><td colspan="9">Open this section to load applications.</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
