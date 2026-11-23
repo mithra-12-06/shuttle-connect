@@ -64,6 +64,18 @@ const reviewRideButton =
 const reviewResult =
     document.getElementById("reviewResult");
 
+const transportSelectionSection =
+    document.getElementById("transportSelectionSection");
+
+const transportServiceCards =
+    document.querySelectorAll("[data-transport-service]");
+
+const confirmTransportSelectionButton =
+    document.getElementById("confirmTransportSelectionButton");
+
+const transportSelectionStatus =
+    document.getElementById("transportSelectionStatus");
+
 const introDropoff =
     document.getElementById("introDropoff");
 
@@ -76,6 +88,7 @@ const introDestination =
 
 let upcomingBookings = [];
 let selectedBooking = null;
+let selectedTransportService = "";
 
 // Pickup location
 let passengerCoordinates = null;
@@ -1585,10 +1598,14 @@ function reviewRideDetails() {
 
     if (reviewResult) {
         reviewResult.hidden = false;
+    }
 
-        reviewResult.scrollIntoView({
+    if (transportSelectionSection) {
+        transportSelectionSection.hidden = false;
+
+        transportSelectionSection.scrollIntoView({
             behavior: "smooth",
-            block: "nearest"
+            block: "start"
         });
     }
 }
@@ -1805,6 +1822,57 @@ if (reviewRideButton) {
         "click",
         reviewRideDetails
     );
+}
+
+// =====================================================
+// TRANSPORT SERVICE SELECTION
+// Frontend UI only. No request is sent to the backend.
+// =====================================================
+
+transportServiceCards.forEach(card => {
+    card.addEventListener("click", () => {
+        selectedTransportService =
+            card.dataset.transportService || "";
+
+        transportServiceCards.forEach(option => {
+            const isSelected = option === card;
+
+            option.setAttribute(
+                "aria-pressed",
+                String(isSelected)
+            );
+        });
+
+        if (confirmTransportSelectionButton) {
+            confirmTransportSelectionButton.disabled =
+                !selectedTransportService;
+        }
+
+        if (transportSelectionStatus) {
+            transportSelectionStatus.hidden = true;
+            transportSelectionStatus.textContent = "";
+        }
+    });
+});
+
+if (confirmTransportSelectionButton) {
+    confirmTransportSelectionButton.addEventListener("click", () => {
+        if (!selectedTransportService) {
+            return;
+        }
+
+        if (transportSelectionStatus) {
+            transportSelectionStatus.textContent =
+                `${selectedTransportService} selected. Your transport preference is displayed here; the admin will allocate a captain separately.`;
+
+            transportSelectionStatus.hidden = false;
+        }
+
+        transportSelectionStatus?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    });
 }
 
 // =====================================================
