@@ -903,7 +903,7 @@ async function handleAdminRoute(req, res, pathname, helpers) {
             const [rows] = await pool.execute(
                 `SELECT application_id,full_name,email,phone,address,vehicle_category,
                         vehicle_registration,vehicle_model,vehicle_year,licence_number,
-                        licence_expiry,application_status,reviewed_by,reviewed_at,
+                        licence_expiry,application_status,
                         rejection_reason,created_at
                  FROM captain_applications ${where}
                  ORDER BY CASE WHEN application_status='pending' THEN 0 ELSE 1 END, created_at DESC`,
@@ -958,16 +958,16 @@ async function handleAdminRoute(req, res, pathname, helpers) {
                 if (action === "approve") {
                     await connection.execute(
                         `UPDATE captain_applications
-                         SET application_status='approved', reviewed_by=?, reviewed_at=NOW(), rejection_reason=NULL
+                         SET application_status='approved', rejection_reason=NULL
                          WHERE application_id=?`,
-                        [admin.user_id,applicationId]
+                        [applicationId]
                     );
                 } else {
                     await connection.execute(
                         `UPDATE captain_applications
-                         SET application_status='rejected', reviewed_by=?, reviewed_at=NOW(), rejection_reason=?
+                         SET application_status='rejected', rejection_reason=?
                          WHERE application_id=?`,
-                        [admin.user_id,reason,applicationId]
+                        [reason,applicationId]
                     );
                 }
                 await connection.commit();
