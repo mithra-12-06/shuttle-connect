@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7041A6">
+
+    <title>Captain Rides | ShuttleConnect</title>
+
+    <link rel="stylesheet" href="css/captain-rides.css">
+</head>
+
+<body>
+
+    <header class="dashboard-header">
+        <a href="captain-rides.html" class="brand">
+            <span class="brand-icon">S</span>
+            <span>ShuttleConnect</span>
+        </a>
+
+        <div class="header-actions">
+            <span class="captain-label">CAPTAIN PORTAL</span>
+            <button type="button" id="logoutButton" class="logout-button">
+                Sign Out
+            </button>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="welcome-section">
+            <div>
+                <p class="eyebrow">YOUR CAPTAIN DASHBOARD</p>
+                <h1>Welcome, <span id="captainName">Captain</span></h1>
+                <p class="welcome-description">
+                    Manage your availability and respond to nearby ride requests.
+                </p>
+            </div>
+
+            <div class="availability-card">
+                <span class="availability-label">YOUR STATUS</span>
+                <span id="availabilityStatus" class="status-pill offline">
+                    Offline
+                </span>
+
+                <button
+                    type="button"
+                    id="availabilityButton"
+                    class="availability-button"
+                >
+                    Go Online
+                </button>
+
+                <p id="availabilityMessage" class="small-message" role="status"></p>
+            </div>
+        </section>
+
+        <section class="dashboard-stats">
+            <article class="stat-card">
+                <span class="stat-label">Available Requests</span>
+                <strong id="requestCount">0</strong>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">Your Active Ride</span>
+                <strong id="activeRideStatus">None</strong>
+            </article>
+
+            <article class="stat-card">
+                <span class="stat-label">Vehicle Category</span>
+                <strong id="vehicleCategory">—</strong>
+            </article>
+        </section>
+
+        <section class="content-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">RIDE OPPORTUNITIES</p>
+                    <h2>Available Ride Requests</h2>
+                    <p>Accept a request that matches your registered vehicle.</p>
+                </div>
+
+                <button
+                    type="button"
+                    id="refreshButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+            </div>
+
+            <div id="requestMessage" class="notice" role="status">
+                Loading ride requests...
+            </div>
+
+            <div id="availableRides" class="rides-grid"></div>
+        </section>
+
+        <section class="content-section active-ride-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CURRENT ASSIGNMENT</p>
+                    <h2>Your Active Ride</h2>
+                    <p>View your accepted ride and verify the passenger OTP.</p>
+                </div>
+            </div>
+
+            <div id="activeRideContainer">
+                <div class="empty-state">
+                    <div class="empty-icon">↗</div>
+                    <h3>No active ride</h3>
+                    <p>When you accept a request, its details will appear here.</p>
+                </div>
+            </div>
+        </section>
+
+        <p class="dashboard-footer">
+            ShuttleConnect Captain Network · Ride information refreshes automatically.
+        </p>
+
+    </main>
+
+    <script src="js/captain-rides.js"></script>
+
+</body>
+</html>

@@ -13,6 +13,10 @@ const handleAdminRoute = require('./routes/adminRoutes');
 const handleCaptainRoute = require('./routes/captainRoutes');
 const handleLastMileRoute = require('./routes/lastMileRoutes');
 
+// NEW: Captain account provisioning route
+const handleAdminCaptainProvisionRoute =
+    require('./routes/adminCaptainProvisionRoutes');
+
 // ==========================================
 // 1. READ JSON REQUEST BODY
 // ==========================================
@@ -148,6 +152,29 @@ const server = http.createServer(async (req, res) => {
     );
 
     if (authHandled) {
+        return;
+    }
+
+    // ======================================
+    // ADMIN CAPTAIN ACCOUNT PROVISIONING
+    //
+    // POST /api/admin/captain-applications/:id/provision-approval
+    //
+    // This must be checked BEFORE the existing
+    // admin route handler.
+    // ======================================
+
+    const captainProvisionHandled =
+        await handleAdminCaptainProvisionRoute(
+            req,
+            res,
+            pathname,
+            {
+                sendJson
+            }
+        );
+
+    if (captainProvisionHandled) {
         return;
     }
 

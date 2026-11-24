@@ -1,0 +1,545 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary: #7041A6;
+    --primary-dark: #563184;
+    --background: #f6f4fa;
+    --surface: #ffffff;
+    --text: #252033;
+    --muted: #777286;
+    --border: #e9e5f0;
+    --success: #18865b;
+    --danger: #c43d4b;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.dashboard-header {
+    min-height: 76px;
+    padding: 14px 6%;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    color: white;
+    background: var(--primary);
+    border-radius: 12px;
+    font-size: 20px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.captain-label,
+.eyebrow {
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.logout-button,
+.secondary-button {
+    padding: 10px 17px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.logout-button:hover,
+.secondary-button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.dashboard-container {
+    width: min(1180px, 90%);
+    margin: 38px auto;
+}
+
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 28px;
+}
+
+.welcome-section h1 {
+    margin: 10px 0;
+    font-size: clamp(25px, 4vw, 35px);
+}
+
+.welcome-section h1 span {
+    color: var(--primary);
+}
+
+.welcome-description,
+.section-heading p:not(.eyebrow) {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.availability-card {
+    width: 235px;
+    flex-shrink: 0;
+    padding: 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(38, 25, 61, 0.04);
+}
+
+.availability-label,
+.stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-pill {
+    display: inline-block;
+    margin: 12px 0;
+    padding: 6px 11px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.status-pill.offline {
+    background: #f0edf3;
+    color: #716a7a;
+}
+
+.status-pill.available {
+    background: #e4f7ed;
+    color: var(--success);
+}
+
+.status-pill.on_ride {
+    background: #fff2dc;
+    color: #a46712;
+}
+
+.status-pill.suspended {
+    background: #fde8ea;
+    color: var(--danger);
+}
+
+.availability-button,
+.primary-button {
+    width: 100%;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    transition: background 0.2s;
+}
+
+.availability-button:hover,
+.primary-button:hover {
+    background: var(--primary-dark);
+}
+
+.availability-button.offline-action {
+    background: #4c4658;
+}
+
+.small-message {
+    min-height: 15px;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 17px;
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    padding: 22px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.stat-card strong {
+    display: block;
+    margin-top: 12px;
+    font-size: 25px;
+    color: var(--primary);
+    text-transform: capitalize;
+}
+
+.content-section {
+    margin-bottom: 30px;
+    padding: 25px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(38, 25, 61, 0.035);
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.section-heading h2 {
+    margin: 8px 0;
+    font-size: 21px;
+}
+
+.notice {
+    margin-bottom: 17px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.notice.error {
+    color: var(--danger);
+}
+
+.rides-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.ride-card {
+    min-width: 0;
+    padding: 19px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: #fff;
+}
+
+.ride-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.ride-reference {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.ride-type {
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #f1ebf8;
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.ride-location {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.location-marker {
+    width: 10px;
+    height: 10px;
+    margin-top: 4px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+}
+
+.location-marker.dropoff {
+    border-color: var(--success);
+    border-radius: 2px;
+}
+
+.location-content span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.location-content strong {
+    display: block;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.ride-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.ride-fare {
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.accept-button {
+    width: auto;
+    min-width: 115px;
+}
+
+.empty-state {
+    padding: 32px 15px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+}
+
+.empty-icon {
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-size: 32px;
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.active-ride-card {
+    padding: 21px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+}
+
+.active-ride-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.active-ride-heading h3 {
+    font-size: 17px;
+}
+
+.ride-status-text {
+    color: var(--success);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.otp-panel {
+    margin-top: 22px;
+    padding: 19px;
+    border-radius: 12px;
+    background: #f8f5fc;
+}
+
+.otp-panel h3 {
+    margin-bottom: 7px;
+}
+
+.otp-panel p {
+    margin-bottom: 14px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.otp-form {
+    display: flex;
+    gap: 10px;
+}
+
+.otp-input {
+    width: 180px;
+    max-width: 100%;
+    padding: 12px;
+    border: 1px solid #dcd4e8;
+    border-radius: 9px;
+    background: white;
+    font-size: 18px;
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+.otp-form .primary-button {
+    width: auto;
+}
+
+.otp-message {
+    min-height: 18px;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.otp-message.error {
+    color: var(--danger);
+}
+
+.otp-message.success {
+    color: var(--success);
+}
+
+.dashboard-footer {
+    padding: 12px 0 30px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .dashboard-header {
+        padding: 13px 5%;
+    }
+
+    .captain-label {
+        display: none;
+    }
+
+    .dashboard-container {
+        width: 92%;
+        margin: 25px auto;
+    }
+
+    .welcome-section {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .availability-card {
+        width: 100%;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    .stat-card strong {
+        font-size: 21px;
+    }
+
+    .content-section {
+        padding: 18px;
+    }
+
+    .rides-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 430px) {
+    .brand {
+        font-size: 16px;
+    }
+
+    .logout-button,
+    .secondary-button {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    .ride-card-bottom {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .accept-button {
+        width: 100%;
+    }
+
+    .otp-form {
+        flex-direction: column;
+    }
+
+    .otp-input,
+    .otp-form .primary-button {
+        width: 100%;
+    }
+}

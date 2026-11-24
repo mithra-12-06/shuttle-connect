@@ -1,7 +1,12 @@
+"use strict";
 
 const {
     createPassengerRideRequest
-} = require('../controllers/lastMileController');
+} = require("../controllers/lastMileController");
+
+const {
+    getPassengerLastMileRides
+} = require("../controllers/passengerLastMileController");
 
 async function handleLastMileRoute(
     req,
@@ -9,10 +14,25 @@ async function handleLastMileRoute(
     pathname,
     helpers
 ) {
-    // POST /api/passenger/last-mile/rides
+    // GET /api/passenger/last-mile/rides
     if (
-        pathname === '/api/passenger/last-mile/rides' &&
-        req.method === 'POST'
+        pathname === "/api/passenger/last-mile/rides" &&
+        req.method === "GET"
+    ) {
+        await getPassengerLastMileRides(
+            req,
+            res,
+            helpers
+        );
+
+        return true;
+    }
+
+    // POST /api/passenger/last-mile/rides
+    // Existing ride-request functionality is preserved.
+    if (
+        pathname === "/api/passenger/last-mile/rides" &&
+        req.method === "POST"
     ) {
         await createPassengerRideRequest(
             req,
