@@ -49,12 +49,18 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
 
         const application = applications[0];
 
-        if (application.application_status !== "pending") {
+        // Allow pending applications and previously approved
+        // applications that still need account provisioning.
+        if (
+            !["pending", "approved"].includes(
+                application.application_status
+            )
+        ) {
             await connection.rollback();
 
             return sendJson(res, 409, {
                 success: false,
-                message: "Only pending applications can be approved."
+                message: "Only pending or unprovisioned approved applications can be provisioned."
             });
         }
 
@@ -70,6 +76,7 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
             });
         }
 
+        // Prevent duplicate user accounts.
         const [existingUsers] = await connection.execute(
             `SELECT user_id
              FROM users
@@ -83,10 +90,30 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
 
             return sendJson(res, 409, {
                 success: false,
-                message: "This applicant's email or phone number is already registered to an existing user account."
+                message: "A user account already exists for this email or phone number. Manual review is required."
             });
         }
 
+        // Prevent duplicate captain profiles for this application.
+        const [existingProfiles] = await connection.execute(
+            `SELECT captain_id
+             FROM captain_profiles
+             WHERE application_id = ?
+             LIMIT 1`,
+            [applicationId]
+        );
+
+        if (existingProfiles.length > 0) {
+            await connection.rollback();
+
+            return sendJson(res, 409, {
+                success: false,
+                message: "A captain profile already exists for this application. Manual review is required."
+            });
+        }
+
+        // Generate a random temporary password.
+        // The captain will set their own password during activation.
         const temporaryPassword = crypto.randomBytes(48).toString("hex");
 
         const temporaryPasswordHash = await bcrypt.hash(
@@ -140,6 +167,7 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
             ]
         );
 
+        // Generate a one-time activation token.
         const activationToken = crypto.randomBytes(32).toString("hex");
 
         const tokenHash = crypto
@@ -163,6 +191,7 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
             [userId, tokenHash, expiresAt]
         );
 
+        // Mark the application approved.
         await connection.execute(
             `UPDATE captain_applications
              SET application_status = 'approved',
@@ -177,7 +206,7 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
 
         return sendJson(res, 201, {
             success: true,
-            message: "Captain application approved and account created. The captain account is inactive until activation.",
+            message: "Captain account created successfully. The captain must activate the account before login.",
             captain: {
                 user_id: userId,
                 captain_id: profileResult.insertId,
@@ -198,7 +227,10 @@ async function approveAndProvisionCaptain(req, res, helpers, admin) {
             try {
                 await connection.rollback();
             } catch (rollbackError) {
-                console.error("Captain provisioning rollback error:", rollbackError);
+                console.error(
+                    "Captain provisioning rollback error:",
+                    rollbackError
+                );
             }
         }
 
@@ -249,7 +281,6 @@ async function reissueCaptainActivation(req, res, helpers, admin) {
         connection = await pool.getConnection();
         await connection.beginTransaction();
 
-        // Lock the approved application and its associated captain account.
         const [rows] = await connection.execute(
             `SELECT
                 ca.application_id,
@@ -310,7 +341,6 @@ async function reissueCaptainActivation(req, res, helpers, admin) {
             });
         }
 
-        // Invalidate all earlier unused activation tokens for this captain.
         await connection.execute(
             `UPDATE captain_account_tokens
              SET used_at = UTC_TIMESTAMP()
@@ -320,7 +350,6 @@ async function reissueCaptainActivation(req, res, helpers, admin) {
             [captain.user_id]
         );
 
-        // Generate a new one-time activation token.
         const activationToken = crypto.randomBytes(32).toString("hex");
 
         const tokenHash = crypto
@@ -328,7 +357,6 @@ async function reissueCaptainActivation(req, res, helpers, admin) {
             .update(activationToken)
             .digest("hex");
 
-        // Store the expiry using the database's UTC clock.
         await connection.execute(
             `INSERT INTO captain_account_tokens (
                 user_id,
@@ -379,7 +407,10 @@ async function reissueCaptainActivation(req, res, helpers, admin) {
             try {
                 await connection.rollback();
             } catch (rollbackError) {
-                console.error("Activation reissue rollback error:", rollbackError);
+                console.error(
+                    "Activation reissue rollback error:",
+                    rollbackError
+                );
             }
         }
 

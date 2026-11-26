@@ -5,6 +5,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
 
+const {
+    approveAndProvisionCaptain
+} = require("../controllers/captainProvisionController");
+
 // ==========================================
 // ADMIN AUTHENTICATION
 // ==========================================
@@ -887,105 +891,206 @@ async function handleAdminRoute(req, res, pathname, helpers) {
         }
 
 
+        
         // ==================================
         // CAPTAIN APPLICATION REVIEW
         // ==================================
 
-        if (pathname === "/api/admin/captain-applications" && req.method === "GET") {
+        // GET ALL CAPTAIN APPLICATIONS
+
+        if (
+            pathname === "/api/admin/captain-applications" &&
+            req.method === "GET"
+        ) {
             const requestUrl = new URL(req.url, "http://localhost");
-            const status = requestUrl.searchParams.get("status") || "pending";
-            const allowed = ["pending", "approved", "rejected", "all"];
+
+            const status =
+                requestUrl.searchParams.get("status") || "pending";
+
+            const allowed = [
+                "pending",
+                "approved",
+                "rejected",
+                "all"
+            ];
+
             if (!allowed.includes(status)) {
-                return sendJson(res, 400, {success:false,message:"Invalid application status filter."});
+                return sendJson(res, 400, {
+                    success: false,
+                    message: "Invalid application status filter."
+                });
             }
-            const where = status === "all" ? "" : "WHERE application_status = ?";
-            const params = status === "all" ? [] : [status];
+
+            const where =
+                status === "all"
+                    ? ""
+                    : "WHERE application_status = ?";
+
+            const params =
+                status === "all"
+                    ? []
+                    : [status];
+
             const [rows] = await pool.execute(
-                `SELECT application_id,full_name,email,phone,address,vehicle_category,
-                        vehicle_registration,vehicle_model,vehicle_year,licence_number,
-                        licence_expiry,application_status,
-                        rejection_reason,created_at
-                 FROM captain_applications ${where}
-                 ORDER BY CASE WHEN application_status='pending' THEN 0 ELSE 1 END, created_at DESC`,
+                `SELECT
+                    application_id,
+                    full_name,
+                    email,
+                    phone,
+                    address,
+                    vehicle_category,
+                    vehicle_registration,
+                    vehicle_model,
+                    vehicle_year,
+                    licence_number,
+                    licence_expiry,
+                    application_status,
+                    rejection_reason,
+                    created_at
+                 FROM captain_applications
+                 ${where}
+                 ORDER BY
+                    CASE
+                        WHEN application_status = 'pending' THEN 0
+                        ELSE 1
+                    END,
+                    created_at DESC`,
                 params
             );
-            return sendJson(res,200,{success:true,total:rows.length,applications:rows});
+
+            return sendJson(res, 200, {
+                success: true,
+                total: rows.length,
+                applications: rows
+            });
         }
 
+        // ==================================
+        // APPROVE / REJECT CAPTAIN APPLICATION
+        // ==================================
+
         const captainApplicationParts = pathname.split("/");
-        const captainApplicationIdPart = captainApplicationParts[4];
-        const captainApplicationAction = captainApplicationParts[5];
+
+        const captainApplicationIdPart =
+            captainApplicationParts[4];
+
+        const captainApplicationAction =
+            captainApplicationParts[5];
+
         const isCaptainApplicationAction =
             captainApplicationParts.length === 6 &&
             captainApplicationParts[1] === "api" &&
             captainApplicationParts[2] === "admin" &&
             captainApplicationParts[3] === "captain-applications" &&
             /^[0-9]+$/.test(captainApplicationIdPart || "") &&
-            ["approve", "reject"].includes(captainApplicationAction);
+            ["approve", "reject"].includes(
+                captainApplicationAction
+            );
 
-        if (isCaptainApplicationAction && req.method === "POST") {
-            const applicationId = Number(captainApplicationIdPart);
+        if (
+            isCaptainApplicationAction &&
+            req.method === "POST"
+        ) {
+            const applicationId = Number(
+                captainApplicationIdPart
+            );
+
             const action = captainApplicationAction;
-            if (!Number.isSafeInteger(applicationId) || applicationId <= 0) {
-                return sendJson(res,400,{success:false,message:"Invalid captain application ID."});
+
+            if (
+                !Number.isSafeInteger(applicationId) ||
+                applicationId <= 0
+            ) {
+                return sendJson(res, 400, {
+                    success: false,
+                    message: "Invalid captain application ID."
+                });
             }
 
-            let reason = null;
-            if (action === "reject") {
-                const data = await readJsonBody(req);
-                reason = String(data.rejection_reason || "").trim();
-                if (!reason || reason.length > 500) {
-                    return sendJson(res,400,{success:false,message:"Provide a rejection reason (maximum 500 characters)."});
-                }
+            // APPROVE: Provision the captain account.
+
+            if (action === "approve") {
+                return await approveAndProvisionCaptain(
+                    req,
+                    res,
+                    helpers,
+                    admin
+                );
+            }
+
+            // REJECT: Preserve the existing rejection process.
+
+            const data = await readJsonBody(req);
+
+            const reason = String(
+                data.rejection_reason || ""
+            ).trim();
+
+            if (!reason || reason.length > 500) {
+                return sendJson(res, 400, {
+                    success: false,
+                    message: "Provide a rejection reason (maximum 500 characters)."
+                });
             }
 
             const connection = await pool.getConnection();
+
             try {
                 await connection.beginTransaction();
+
                 const [rows] = await connection.execute(
-                    "SELECT application_id,application_status FROM captain_applications WHERE application_id=? FOR UPDATE",
+                    `SELECT
+                        application_id,
+                        application_status
+                     FROM captain_applications
+                     WHERE application_id = ?
+                     FOR UPDATE`,
                     [applicationId]
                 );
+
                 if (!rows.length) {
                     await connection.rollback();
-                    return sendJson(res,404,{success:false,message:"Captain application not found."});
-                }
-                if (rows[0].application_status !== "pending") {
-                    await connection.rollback();
-                    return sendJson(res,409,{success:false,message:"Only pending applications can be reviewed."});
+
+                    return sendJson(res, 404, {
+                        success: false,
+                        message: "Captain application not found."
+                    });
                 }
 
-                if (action === "approve") {
-                    await connection.execute(
-                        `UPDATE captain_applications
-                         SET application_status='approved',
-                             reviewed_by=?,
-                             reviewed_at=NOW(),
-                             rejection_reason=NULL
-                         WHERE application_id=?`,
-                        [admin.user_id, applicationId]
-                    );
-                } else {
-                    await connection.execute(
-                        `UPDATE captain_applications
-                         SET application_status='rejected',
-                             reviewed_by=?,
-                             reviewed_at=NOW(),
-                             rejection_reason=?
-                         WHERE application_id=?`,
-                        [admin.user_id, reason, applicationId]
-                    );
+                if (rows[0].application_status !== "pending") {
+                    await connection.rollback();
+
+                    return sendJson(res, 409, {
+                        success: false,
+                        message: "Only pending applications can be rejected."
+                    });
                 }
+
+                await connection.execute(
+                    `UPDATE captain_applications
+                     SET application_status = 'rejected',
+                         reviewed_by = ?,
+                         reviewed_at = NOW(),
+                         rejection_reason = ?
+                     WHERE application_id = ?`,
+                    [
+                        admin.user_id,
+                        reason,
+                        applicationId
+                    ]
+                );
+
                 await connection.commit();
-                return sendJson(res,200,{
-                    success:true,
-                    message: action === "approve"
-                        ? "Application approved. Captain account activation is a separate step."
-                        : "Captain application rejected successfully."
+
+                return sendJson(res, 200, {
+                    success: true,
+                    message: "Captain application rejected successfully."
                 });
-            } catch(error) {
+
+            } catch (error) {
                 await connection.rollback();
                 throw error;
+
             } finally {
                 connection.release();
             }

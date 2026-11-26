@@ -2004,6 +2004,10 @@ async function submitLastMileRideRequest() {
         }
 
         const ride = result.ride;
+        localStorage.setItem(
+    "lastMileRideReference",
+    String(ride.ride_reference)
+);
 
         rideRequestCreated = true;
 
