@@ -144,11 +144,12 @@ The project was developed and tested locally with Node.js and MySQL, using WAMP 
 
 ## Future Enhancements
 
-The internship report identifies these as potential future extensions, not completed features:
+If the below technologies are extended further then it will be the strongest 
 
 - Payment gateway integration and refund processing.
 - Live GPS-based shuttle tracking and estimated arrival times.
 - Automated SMS, email or in-app passenger notifications.
+- Implementing Agentic AI workflows to the admin panel replaces the manual work of admin to aprove the applications and perform CRUD!
 - Fleet analytics and reporting dashboards.
 - Dedicated Android and iOS applications.
 - Expanded scheduled feeder-shuttle connectivity and external transportation-data integration.
@@ -158,4 +159,4 @@ The internship report identifies these as potential future extensions, not compl
 **Project title:** Smart Shuttle Booking & Fleet Operations Portal  
 **Domain:** Full-Stack Development
 
-This README is a concise, repository-oriented overview derived from the project internship report. Refer to the source report for the detailed implementation narrative and testing evidence.
+
