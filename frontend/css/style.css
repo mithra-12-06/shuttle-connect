@@ -1746,3 +1746,14 @@ input, select, textarea { font-family: inherit; }
         transition: none;
     }
 }
+
+
+/* Navigation hover must remain text-only: no pale/white background flash */
+.nav-links a:hover,
+.nav-links a.active,
+.dashboard-navigation a:hover,
+.dashboard-navigation a.active,
+.site-navigation a:hover,
+.site-navigation a.active {
+    background: transparent !important;
+}
