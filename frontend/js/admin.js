@@ -1,3 +1,4 @@
+
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         vehicles: "Vehicle Management",
         bookings: "Booking Management",
         passengers: "Passenger Management",
+        captainApplications: "Captain Applications",
         connectivity: "Connectivity Requests",
         service: "Service Status",
         settings: "Settings"
@@ -38,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let routes = [];
     let vehicles = [];
     let trips = [];
+    let captainApplications = [];
 
     // ------------------------------------------
     // COMMON HELPERS
@@ -274,8 +277,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const title = pageTitles[viewName] || "Dashboard";
 
-        pageHeading.textContent = title;
-        breadcrumbName.textContent = title;
+        if (pageHeading) pageHeading.textContent = title;
+        if (breadcrumbName) breadcrumbName.textContent = title;
 
         closeSidebar();
 
@@ -287,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (viewName === "vehicles") loadVehicles();
         if (viewName === "bookings") loadBookings();
         if (viewName === "passengers") loadPassengers();
+        if (viewName === "captainApplications") loadCaptainApplications();
     }
 
     document.querySelectorAll(".nav-item[data-view]").forEach(button => {
@@ -351,14 +355,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
             }
 
-            const status = document.querySelector(".system-status");
-
-            if (status) {
-                status.innerHTML = `
-                    <span class="status-dot admin-online"></span>
-                    Live backend connected
-                `;
-            }
+            // IMPORTANT:
+            // Do not modify .system-status here.
+            // The HTML label "Frontend Preview" must remain visible.
 
         } catch (error) {
             showMessage(error.message, "error");
@@ -737,6 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             document.getElementById("addtripsButton")
                 .addEventListener("click", () => openTripForm());
+
             document.getElementById("tripsSearch")
                 .addEventListener("input", event => {
                     const query = event.target.value.toLowerCase();
@@ -886,7 +886,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ------------------------------------------
-    // BOOKINGS VIEW (READ-ONLY ADMIN MONITORING)
+    // BOOKINGS VIEW
     // ------------------------------------------
 
     function displaySeatNumbers(booking) {
@@ -977,21 +977,28 @@ document.addEventListener("DOMContentLoaded", () => {
             renderBookings(bookings);
 
             const search = document.getElementById("bookingsSearch");
+
             search?.addEventListener("input", event => {
                 const query = event.target.value.toLowerCase();
+
                 document.querySelectorAll("#bookingsTableBody tr").forEach(row => {
                     row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
                 });
             });
+
         } catch (error) {
             showMessage(error.message, "error");
+
             const tbody = document.getElementById("bookingsTableBody");
-            if (tbody) tbody.innerHTML = `<tr><td colspan="8">Unable to load bookings. Please try again.</td></tr>`;
+
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="8">Unable to load bookings. Please try again.</td></tr>`;
+            }
         }
     }
 
     // ------------------------------------------
-    // PASSENGERS VIEW (READ-ONLY ADMIN MONITORING)
+    // PASSENGERS VIEW
     // ------------------------------------------
 
     function renderPassengers(passengers) {
@@ -1056,19 +1063,227 @@ document.addEventListener("DOMContentLoaded", () => {
             renderPassengers(passengers);
 
             const search = document.getElementById("passengersSearch");
+
             search?.addEventListener("input", event => {
                 const query = event.target.value.toLowerCase();
+
                 document.querySelectorAll("#passengersTableBody tr").forEach(row => {
                     row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
                 });
             });
+
         } catch (error) {
             showMessage(error.message, "error");
+
             const tbody = document.getElementById("passengersTableBody");
-            if (tbody) tbody.innerHTML = `<tr><td colspan="8">Unable to load passengers. Please try again.</td></tr>`;
+
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="8">Unable to load passengers. Please try again.</td></tr>`;
+            }
         }
     }
-        // ------------------------------------------
+
+    // ------------------------------------------
+    // CAPTAIN APPLICATIONS
+    // ------------------------------------------
+
+    function renderCaptainApplications() {
+        const tbody = document.getElementById("captainApplicationsTableBody");
+        if (!tbody) return;
+
+        const query = (
+            document.getElementById("captainApplicationSearch")?.value || ""
+        ).trim().toLowerCase();
+
+        const filtered = captainApplications.filter(item =>
+            [
+                item.application_id,
+                item.full_name,
+                item.email,
+                item.phone,
+                item.vehicle_category,
+                item.vehicle_registration,
+                item.vehicle_model,
+                item.vehicle_year,
+                item.licence_number
+            ].join(" ").toLowerCase().includes(query)
+        );
+
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="9">No captain applications found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(item => {
+            const status = String(item.application_status || "pending");
+
+            const statusClass =
+                status === "approved" ? "active" :
+                status === "rejected" ? "inactive" :
+                "pending";
+
+            const vehicle = [
+                item.vehicle_model,
+                item.vehicle_registration,
+                item.vehicle_year
+            ].filter(Boolean).join(" · ");
+
+            let actions = "—";
+
+            if (status === "pending") {
+                actions = `
+                    <button class="table-action"
+                        data-approve-captain="${escapeHTML(item.application_id)}">
+                        Approve
+                    </button>
+
+                    <button class="table-action danger"
+                        data-reject-captain="${escapeHTML(item.application_id)}">
+                        Reject
+                    </button>
+                `;
+            } else if (status === "rejected" && item.rejection_reason) {
+                actions = `
+                    <span title="${escapeHTML(item.rejection_reason)}">
+                        Reason available
+                    </span>
+                `;
+            }
+
+            return `
+                <tr>
+                    <td>${escapeHTML(item.application_id)}</td>
+                    <td><strong>${escapeHTML(item.full_name)}</strong></td>
+                    <td>${escapeHTML(item.email)}</td>
+                    <td>${escapeHTML(item.phone)}</td>
+                    <td>${escapeHTML(item.vehicle_category)}</td>
+                    <td>${escapeHTML(vehicle || "—")}</td>
+                    <td>${formatDate(item.licence_expiry)}</td>
+                    <td>
+                        <span class="record-status ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+                    </td>
+                    <td>${actions}</td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    async function loadCaptainApplications() {
+        const tbody = document.getElementById("captainApplicationsTableBody");
+        const filter = document.getElementById("captainApplicationStatus");
+
+        if (!tbody || !filter) return;
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9">Loading captain applications...</td>
+            </tr>
+        `;
+
+        try {
+            const result = await apiRequest(
+                `/admin/captain-applications?status=${encodeURIComponent(filter.value || "pending")}`
+            );
+
+            captainApplications = result.applications || [];
+
+            renderCaptainApplications();
+
+        } catch (error) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9">${escapeHTML(error.message)}</td>
+                </tr>
+            `;
+
+            showMessage(error.message, "error");
+        }
+    }
+
+    document.getElementById("captainApplicationSearch")
+        ?.addEventListener("input", renderCaptainApplications);
+
+    document.getElementById("captainApplicationStatus")
+        ?.addEventListener("change", loadCaptainApplications);
+
+    document.getElementById("captainApplicationsTableBody")
+        ?.addEventListener("click", async event => {
+
+            const approve = event.target.closest("[data-approve-captain]");
+            const reject = event.target.closest("[data-reject-captain]");
+
+            if (!approve && !reject) return;
+
+            const id = approve
+                ? approve.dataset.approveCaptain
+                : reject.dataset.rejectCaptain;
+
+            // APPROVE APPLICATION
+
+            if (approve) {
+                if (!confirm("Approve this captain application?")) return;
+
+                approve.disabled = true;
+
+                try {
+                    const result = await apiRequest(
+                        `/admin/captain-applications/${id}/approve`,
+                        {
+                            method: "POST"
+                        }
+                    );
+
+                    showMessage(result.message || "Application approved.");
+
+                    await loadCaptainApplications();
+
+                } catch (error) {
+                    showMessage(error.message, "error");
+                    approve.disabled = false;
+                }
+
+                return;
+            }
+
+            // REJECT APPLICATION
+
+            const reason = prompt(
+                "Enter the reason for rejecting this application:"
+            );
+
+            if (reason === null) return;
+
+            if (!reason.trim()) {
+                showMessage("A rejection reason is required.", "error");
+                return;
+            }
+
+            reject.disabled = true;
+
+            try {
+                const result = await apiRequest(
+                    `/admin/captain-applications/${id}/reject`,
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            rejection_reason: reason.trim()
+                        })
+                    }
+                );
+
+                showMessage(result.message || "Application rejected.");
+
+                await loadCaptainApplications();
+
+            } catch (error) {
+                showMessage(error.message, "error");
+                reject.disabled = false;
+            }
+        });
+
+    // ------------------------------------------
     // LOGOUT
     // ------------------------------------------
 
