@@ -81,6 +81,15 @@ a {
     color: #ffffff;
     font-size: 20px;
     font-weight: 750;
+    text-decoration: none;
+}
+
+.brand-wordmark {
+    color: #ffffff;
+}
+
+.brand-connect {
+    color: #f0c040;
 }
 
 .brand-icon {
@@ -112,12 +121,12 @@ a {
 
 .primary-nav-links a:hover,
 .primary-nav-links a.active {
-    color: #ffffff;
+    color: #f0c040;
 }
 
 .primary-nav-links a.active {
-    border-bottom: 2px solid var(--lm-accent);
-    padding-bottom: 8px;
+    border-bottom: 0;
+    padding-bottom: 0;
 }
 
 .profile-initial {
@@ -1198,6 +1207,50 @@ a {
     }
 }
 
+
+
+/* NAVBAR: gold text + animated underline only; keep background unchanged */
+.navbar .primary-nav-links a {
+    position: relative;
+    padding: 10px 0;
+    background: transparent !important;
+    transition: color 0.25s ease;
+}
+
+.navbar .primary-nav-links a:hover,
+.navbar .primary-nav-links a.active {
+    color: #f0c040;
+    background: transparent !important;
+}
+
+.navbar .primary-nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 3px;
+    width: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: #f0c040;
+    transform: translateX(-50%);
+    transition: width 0.28s ease;
+    pointer-events: none;
+}
+
+.navbar .primary-nav-links a:hover::after {
+    width: 100%;
+}
+
+.navbar .primary-nav-links a.active::after {
+    width: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar .primary-nav-links a,
+    .navbar .primary-nav-links a::after {
+        transition: none;
+    }
+}
 
 /* =========================================================
    CONSISTENT GOLD NAVIGATION HOVER
