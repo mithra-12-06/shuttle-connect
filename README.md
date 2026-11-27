@@ -144,7 +144,7 @@ The project was developed and tested locally with Node.js and MySQL, using WAMP 
 
 ## Future Enhancements
 
-If the below technologies are extended further then it will be the strongest 
+If the below technologies are extended further then it will be the Good to go product! 
 
 - Payment gateway integration and refund processing.
 - Live GPS-based shuttle tracking and estimated arrival times.
